@@ -12,6 +12,8 @@ Base URL: http://sheriff.tiste.io
 
 ## How it works?
 
-### /label-status-check
+### /label
 
 When adding a "Mergeable" label to your pull request, it will pass the status check to green, otherwise red.
+
+> You can configure the label name with the query param `?name=AnotherLabel`
