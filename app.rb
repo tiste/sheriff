@@ -12,7 +12,7 @@ get '/' do
   'I\'m okay dude.'
 end
 
-post '/event_handler' do
+post '/label-status-check' do
   @payload = JSON.parse(params[:payload])
 
   case request.env['HTTP_X_GITHUB_EVENT']
