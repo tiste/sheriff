@@ -20,17 +20,7 @@ post '/label' do
 
   case request.env['HTTP_X_GITHUB_EVENT']
   when 'pull_request'
-    if @payload['action'] === 'labeled'
-      process_label(@payload['pull_request'], @payload['label'], label_name, true)
-    end
-
-    if @payload['action'] === 'unlabeled'
-      process_label(@payload['pull_request'], @payload['label'], label_name, false)
-    end
-
-    if @payload['action'] === 'opened'
-      process_label(@payload['pull_request'], {}, label_name, false)
-    end
+    process_label(@payload['pull_request'], label_name)
   end
 end
 
@@ -42,29 +32,24 @@ post '/reviews' do
 
   case request.env['HTTP_X_GITHUB_EVENT']
   when 'pull_request'
-    if @payload['action'] === 'opened'
-      process_reviews(@payload['pull_request'], minimum)
-    end
+    process_reviews(@payload['pull_request'], minimum)
   when 'pull_request_review'
-    if @payload['action'] === 'submitted'
-      process_reviews(@payload['pull_request'], minimum)
-    end
+    process_reviews(@payload['pull_request'], minimum)
   end
 end
 
 helpers do
-  def process_label(pull_request, label, name, is_success)
-    do_something = label['name'].to_s.downcase === name || label.empty?
+  def process_label(pull_request, name)
+    issue = @client.issue(pull_request['base']['repo']['full_name'], pull_request['number'])
 
-    if do_something
-      state = is_success ? 'success' : 'error'
-      description = is_success ? "The \"#{name}\" label is attached, go for it" : "Pull Request doesn\'t have the label \"#{name}\" yet"
+    is_success = !issue.labels.select { |label| label[:name].downcase === name.downcase }.empty?
+    state = is_success ? 'success' : 'error'
+    description = is_success ? "The \"#{name}\" label is attached, go for it" : "Pull Request doesn\'t have the label \"#{name}\" yet"
 
-      @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
-        context: 'sheriff/label',
-        description: description,
-      })
-    end
+    @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
+      context: 'sheriff/label',
+      description: description,
+    })
   end
 
   def process_reviews(pull_request, minimum)
