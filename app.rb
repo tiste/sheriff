@@ -1,15 +1,59 @@
 require 'sinatra'
+require 'sinatra/activerecord'
 require 'json'
 require 'octokit'
+require 'securerandom'
 
-ACCESS_TOKEN = ENV['GITHUB_PERSONAL_TOKEN']
+Dir["#{Dir.pwd}/models/*.rb"].each { |file| require file }
+
+CLIENT_ID = ENV['GITHUB_APP_CLIENT_ID']
+CLIENT_SECRET = ENV['GITHUB_APP_SECRET_ID']
+
+use Rack::Session::Cookie, secret: rand.to_s
 
 before do
-  @client ||= Octokit::Client.new(access_token: ACCESS_TOKEN)
+  authenticated?
 end
 
 get '/' do
-  'I\'m okay dude.'
+  if @user
+    client = Octokit::Client.new client_id: CLIENT_ID, client_secret: CLIENT_SECRET
+
+    begin
+      client.check_application_authorization @user.access_token
+    rescue => e
+      session[:token] = nil
+      return authenticate!
+    end
+
+    erb :home, { locals: { token: @user.token } }
+  else
+    authenticate!
+  end
+end
+
+get '/callback' do
+  session_code = request.env['rack.request.query_hash']['code']
+  result = Octokit.exchange_code_for_token session_code, CLIENT_ID, CLIENT_SECRET
+
+  if @user
+    @user.update access_token: result[:access_token]
+  else
+    client = Octokit::Client.new access_token: result[:access_token]
+    @user = User.find_by user_id: client.user.id
+
+    if @user
+      # first check if user is not already registered
+      @user.update access_token: result[:access_token]
+    else
+      # otherwise create it
+      @user = User.create user_id: client.user.id, token: SecureRandom.uuid, access_token: result[:access_token]
+    end
+  end
+
+  session[:token] = @user.token
+
+  redirect '/'
 end
 
 post '/label' do
@@ -39,6 +83,22 @@ post '/reviews' do
 end
 
 helpers do
+  def authenticated?
+    token = session[:token] || params[:token]
+    @user = User.find_by token: token
+
+    if @user
+      @client = Octokit::Client.new access_token: @user.access_token
+    end
+  end
+
+  def authenticate!
+    client = Octokit::Client.new
+    url = client.authorize_url CLIENT_ID, scope: 'repo,write:repo_hook'
+
+    redirect url
+  end
+
   def process_label(pull_request, name)
     issue = @client.issue(pull_request['base']['repo']['full_name'], pull_request['number'])
 

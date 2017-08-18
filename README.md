@@ -27,3 +27,7 @@ When adding a "Mergeable" label to your pull request, it will pass the status ch
 When 2 or more approvals are given to your pull request, it will pass the status check to green, otherwise red.
 
 > You can configure the minimum number of reviews with the query param `?minimum=1`
+
+## Run it
+
+`rake db:create && rake db:migrate`
