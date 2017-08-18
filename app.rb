@@ -39,7 +39,16 @@ get '/callback' do
   if @user
     @user.update access_token: result[:access_token]
   else
-    @user = User.create token: SecureRandom.uuid, access_token: result[:access_token]
+    client = Octokit::Client.new access_token: result[:access_token]
+    @user = User.find_by user_id: client.user.id
+
+    if @user
+      # first check if user is not already registered
+      @user.update access_token: result[:access_token]
+    else
+      # otherwise create it
+      @user = User.create user_id: client.user.id, token: SecureRandom.uuid, access_token: result[:access_token]
+    end
   end
 
   session[:token] = @user.token
@@ -75,7 +84,7 @@ end
 
 helpers do
   def authenticated?
-    token = params[:token] || session[:token]
+    token = session[:token] || params[:token]
     @user = User.find_by token: token
 
     if @user
