@@ -36,7 +36,12 @@ get '/callback' do
   session_code = request.env['rack.request.query_hash']['code']
   result = Octokit.exchange_code_for_token session_code, CLIENT_ID, CLIENT_SECRET
 
-  @user = User.create token: SecureRandom.uuid, access_token: result[:access_token]
+  if @user
+    @user.update access_token: result[:access_token]
+  else
+    @user = User.create token: SecureRandom.uuid, access_token: result[:access_token]
+  end
+
   session[:token] = @user.token
 
   redirect '/'
