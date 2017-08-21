@@ -1,8 +1,11 @@
 <html>
-  <head>
-  </head>
-  <body>
-    <p>http://sheriff.tiste.io/reviews?token=<%= token %></p>
-    <p>http://sheriff.tiste.io/label?token=<%= token %></p>
-  </body>
+<head>
+    <title>Sheriff</title>
+</head>
+<body>
+    Auto add Github webhook
+    <% FEATURES.each do |name, feature| %>
+        <a href="/<%= name %>"><%= name %></a>
+    <% end %>
+</body>
 </html>

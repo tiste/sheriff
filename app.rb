@@ -1,8 +1,11 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'json'
+require 'uri'
 require 'octokit'
 require 'securerandom'
+
+require './features'
 
 Dir["#{Dir.pwd}/models/*.rb"].each { |file| require file }
 
@@ -16,20 +19,19 @@ before do
 end
 
 get '/' do
-  if @user
-    client = Octokit::Client.new client_id: CLIENT_ID, client_secret: CLIENT_SECRET
+  authenticate_web!
 
-    begin
-      client.check_application_authorization @user.access_token
-    rescue => e
-      session[:token] = nil
-      return authenticate!
-    end
+  erb :home
+end
 
-    erb :home, { locals: { token: @user.token } }
-  else
-    authenticate!
-  end
+post '/setup' do
+  feature = FEATURES[params[:name].to_sym]
+
+  options = { token: @user.token }.merge params[:options]
+
+  @client.create_hook(params[:repo], 'web', { url: "http://sheriff.tiste.io/#{feature[:name]}?#{URI.encode_www_form(options)}" }, { events: feature[:github_events], active: true })
+
+  redirect '/'
 end
 
 get '/callback' do
@@ -56,11 +58,23 @@ get '/callback' do
   redirect '/'
 end
 
+
+# features
+
+get %r{/(label|reviews)} do
+  authenticate_web!
+
+  repos = @client.repos
+  feature = FEATURES[params[:captures].first.to_sym]
+
+  erb :feature, { locals: { token: @user.token, feature: feature, repos: repos } }
+end
+
 post '/label' do
   @payload = JSON.parse(params[:payload])
   puts "Label: #{@payload['action']}"
 
-  label_name = (params[:name] || 'mergeable').to_s.downcase
+  label_name = (params[:name] || FEATURES[:label][:options][:name]).to_s.downcase
 
   case request.env['HTTP_X_GITHUB_EVENT']
   when 'pull_request'
@@ -72,7 +86,7 @@ post '/reviews' do
   @payload = JSON.parse(params[:payload])
   puts "Reviews: #{@payload['action']}"
 
-  minimum = Integer(params[:minimum]) rescue 2
+  minimum = Integer(params[:minimum]) rescue FEATURES[:reviews][:options][:minimum]
 
   case request.env['HTTP_X_GITHUB_EVENT']
   when 'pull_request'
@@ -97,6 +111,21 @@ helpers do
     url = client.authorize_url CLIENT_ID, scope: 'repo,write:repo_hook'
 
     redirect url
+  end
+
+  def authenticate_web!
+    if @user
+      client = Octokit::Client.new client_id: CLIENT_ID, client_secret: CLIENT_SECRET
+
+      begin
+        client.check_application_authorization @user.access_token
+      rescue => e
+        session[:token] = nil
+        return authenticate!
+      end
+    else
+      return authenticate!
+    end
   end
 
   def process_label(pull_request, name)
