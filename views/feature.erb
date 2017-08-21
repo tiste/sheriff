@@ -18,6 +18,6 @@
         <input type="submit">
     </form>
 
-    <small>http://sheriff.tiste.io/<%= feature[:name] %>?<%= URI.encode_www_form(feature[:options]) %>&token=<%= token %></small>
+    <small>http://sheriff.tiste.io/<%= feature[:name] %>?token=<%= token %>&<%= URI.encode_www_form(feature[:options]) %></small>
 </body>
 </html>

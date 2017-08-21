@@ -27,7 +27,7 @@ end
 post '/setup' do
   feature = FEATURES[params[:name].to_sym]
 
-  options = { token: @user.token }.merge params[:options]
+  options = { token: @user.token }.merge params[:options] || {}
 
   @client.create_hook(params[:repo], 'web', { url: "http://sheriff.tiste.io/#{feature[:name]}?#{URI.encode_www_form(options)}" }, { events: feature[:github_events], active: true })
 
@@ -61,7 +61,7 @@ end
 
 # features
 
-get %r{/(label|reviews)} do
+get %r{/(label|reviews|commit-msg)} do
   authenticate_web!
 
   repos = @client.repos
@@ -93,6 +93,16 @@ post '/reviews' do
     process_reviews(@payload['pull_request'], minimum)
   when 'pull_request_review'
     process_reviews(@payload['pull_request'], minimum)
+  end
+end
+
+post '/commit-msg' do
+  @payload = JSON.parse(params[:payload])
+  puts "Commit msg: #{@payload['action']}"
+
+  case request.env['HTTP_X_GITHUB_EVENT']
+  when 'pull_request'
+    process_commit_msg(@payload['pull_request'])
   end
 end
 
@@ -131,7 +141,7 @@ helpers do
   def process_label(pull_request, name)
     issue = @client.issue(pull_request['base']['repo']['full_name'], pull_request['number'])
 
-    is_success = !issue.labels.select { |label| label[:name].downcase === name.downcase }.empty?
+    is_success = !issue.labels.select { |l| l[:name].downcase === name.downcase }.empty?
     state = is_success ? 'success' : 'error'
     description = is_success ? "The \"#{name}\" label is attached, go for it" : "Pull Request doesn\'t have the label \"#{name}\" yet"
 
@@ -144,12 +154,27 @@ helpers do
   def process_reviews(pull_request, minimum)
     reviews = @client.pull_request_reviews(pull_request['base']['repo']['full_name'], pull_request['number'])
 
-    is_success = reviews.sort_by { |review| review[:id] }.reverse!.uniq { |review| review[:user][:id] }.select { |review| review[:state] === 'APPROVED' }.size >= minimum
+    is_success = reviews.sort_by { |r| r[:id] }.reverse!.uniq { |r| r[:user][:id] }.select { |r| r[:state] === 'APPROVED' }.size >= minimum
     state = is_success ? 'success' : 'error'
     description = is_success ? "There is at least #{minimum} or more approvals, it's okay" : "Pull Request doesn't have enough reviews (#{minimum})"
 
     @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
       context: 'sheriff/reviews',
+      description: description,
+    })
+  end
+
+  COMMIT_MSG_REGEX = /^((\w+)(?:\(([^\)\s]+)\))?: (.+))(?:\n|$)/
+  def process_commit_msg(pull_request)
+    commits = @client.pull_request_commits(pull_request['base']['repo']['full_name'], pull_request['number'])
+
+    errors = commits.map { |c| c[:commit] }.map { |c| c[:message] }.map { |c| COMMIT_MSG_REGEX =~ c }.select(&:nil?).count
+    is_success = errors === 0
+    state = is_success ? 'success' : 'error'
+    description = is_success ? "All commit messages are okay" : "Some commits (#{errors}) have invalid messages"
+
+    @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
+      context: 'sheriff/commit-msg',
       description: description,
     })
   end

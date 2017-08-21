@@ -16,5 +16,11 @@ FEATURES = {
       minimum: 2
     },
     github_events: ['pull_request', 'pull_request_review']
+  },
+  'commit-msg': {
+    name: 'commit-msg',
+    description: 'When all commit messages of your pull request are respecting the conventionalcommits.org, it will pass the status check to green, otherwise red.',
+    options: {},
+    github_events: ['pull_request']
   }
 }

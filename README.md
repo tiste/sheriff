@@ -42,6 +42,12 @@ When 2 or more approvals are given to your pull request, it will pass the status
 
 > Github events: "Pull Request", "Pull request review"
 
+### /commit-msg
+
+When all commit messages of your pull request are respecting the conventionalcommits.org, it will pass the status check to green, otherwise red.
+
+> Github events: "Pull Request"
+
 ## Run it locally
 
 `rake db:create && rake db:migrate`
