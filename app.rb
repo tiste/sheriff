@@ -26,10 +26,18 @@ get '/' do
       return authenticate!
     end
 
-    erb :home, { locals: { token: @user.token } }
+    repos = @client.repos
+
+    erb :home, { locals: { token: @user.token, repos: repos } }
   else
     authenticate!
   end
+end
+
+post '/setup' do
+  @client.create_hook(params[:name], 'web', { url: "http://sheriff.tiste.io/#{params[:feature]}" }, { events: ['pull_request', 'pull_request_review'], active: true })
+
+  redirect '/'
 end
 
 get '/callback' do

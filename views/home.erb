@@ -1,8 +1,19 @@
 <html>
-  <head>
-  </head>
-  <body>
+<head>
+</head>
+<body>
+    <form method="post" action="/setup">
+        <input type="text" name="name" placeholder="eg: <%= repos.first.full_name %>">
+
+        <select name="feature">
+            <option value="label">Label</option>
+            <option value="reviews">Reviews</option>
+        </select>
+
+        <input type="submit">
+    </form>
+
     <p>http://sheriff.tiste.io/reviews?token=<%= token %></p>
     <p>http://sheriff.tiste.io/label?token=<%= token %></p>
-  </body>
+</body>
 </html>
