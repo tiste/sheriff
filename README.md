@@ -1,20 +1,30 @@
 <p align="center">
-  <img src="http://ccofal.org/alabama/images/Alabama-Sheriffs.png" alt="Sheriff">
+  <img src="./images/logo.png" alt="Sheriff">
 </p>
 
 > "Don't merge that pull request because I'm not okay with it. You listen to me? Uh..."
 >
 > ... 2 hours later: "F*ck, you merged it anyway!"
 
+## What is it?
+
+<img src="./images/checks.png" alt="What is it?">
+
 ## Install
 
-Just add a new webhook to your Github repo, then give it "Pull Request", "Pull request review" and "Issues" events.
+### Easy way
+
+Just go on the website, choose for a [feature](#features), submit it!
+
+### Manual way
+
+Add a new webhook to your Github repo, then choose a [feature](#features), append your token and options to the URL.
 
 Base URL: http://sheriff.tiste.io
 
-Example: http://sheriff.tiste.io/reviews?minimum=3
+Example: http://sheriff.tiste.io/reviews?minimum=3&token=foobar
 
-## How it works?
+## Features
 
 ### /label
 
@@ -22,12 +32,16 @@ When adding a "Mergeable" label to your pull request, it will pass the status ch
 
 > You can configure the label name with the query param `?name=AnotherLabel`
 
+> Github events: "Pull Request"
+
 ### /reviews
 
 When 2 or more approvals are given to your pull request, it will pass the status check to green, otherwise red.
 
 > You can configure the minimum number of reviews with the query param `?minimum=1`
 
-## Run it
+> Github events: "Pull Request", "Pull request review"
+
+## Run it locally
 
 `rake db:create && rake db:migrate`
