@@ -1,19 +1,11 @@
 <html>
 <head>
+    <title>Sheriff</title>
 </head>
 <body>
-    <form method="post" action="/setup">
-        <input type="text" name="name" placeholder="eg: <%= repos.first.full_name %>">
-
-        <select name="feature">
-            <option value="label">Label</option>
-            <option value="reviews">Reviews</option>
-        </select>
-
-        <input type="submit">
-    </form>
-
-    <p>http://sheriff.tiste.io/reviews?token=<%= token %></p>
-    <p>http://sheriff.tiste.io/label?token=<%= token %></p>
+    Auto add Github webhook
+    <% FEATURES.each do |name, feature| %>
+        <a href="/<%= name %>"><%= name %></a>
+    <% end %>
 </body>
 </html>

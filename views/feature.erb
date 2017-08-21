@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title><%= feature[:name].capitalize %></title>
+</head>
+<body>
+    <p><%= feature[:description] %></p>
+
+    <form method="post" action="/setup">
+        <input type="text" name="name" value="<%= feature[:name] %>" hidden>
+
+        <input type="text" name="repo" placeholder="eg: <%= repos.first.full_name %>" required>
+
+        <% feature[:options].each do |k, v| %>
+            <label for="<%= k %>"><%= k.capitalize %></label>
+            <input type="text" name="options[<%= k %>]" id="<%= k %>" value="<%= v %>" placeholder="eg: <%= v %>" required>
+        <% end %>
+
+        <input type="submit">
+    </form>
+
+    <small>http://sheriff.tiste.io/<%= feature[:name] %>?<%= URI.encode_www_form(feature[:options]) %>&token=<%= token %></small>
+</body>
+</html>
