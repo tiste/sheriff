@@ -61,7 +61,7 @@ end
 
 # features
 
-get %r{/(label|reviews|commit-msg)} do
+get %r{/(label|reviews|commit-msg|branch)} do
   authenticate_web!
 
   repos = @client.repos
@@ -106,6 +106,18 @@ post '/commit-msg' do
   end
 end
 
+post '/branch' do
+  @payload = JSON.parse(params[:payload])
+  puts "Branch: #{@payload['action']}"
+
+  pattern = Regexp.new(params[:pattern] || FEATURES[:branch][:options][:pattern])
+
+  case request.env['HTTP_X_GITHUB_EVENT']
+  when 'pull_request'
+    process_branch(@payload['pull_request'], pattern)
+  end
+end
+
 helpers do
   def authenticated?
     token = session[:token] || params[:token]
@@ -143,7 +155,7 @@ helpers do
 
     is_success = !issue.labels.select { |l| l[:name].downcase === name.downcase }.empty?
     state = is_success ? 'success' : 'error'
-    description = is_success ? "The \"#{name}\" label is attached, go for it" : "Pull Request doesn\'t have the label \"#{name}\" yet"
+    description = is_success ? "The \"#{name}\" label is attached, go for it" : "Pull Request doesn't have the label \"#{name}\" yet"
 
     @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
       context: 'sheriff/label',
@@ -175,6 +187,17 @@ helpers do
 
     @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
       context: 'sheriff/commit-msg',
+      description: description,
+    })
+  end
+
+  def process_branch(pull_request, pattern)
+    is_success = !(pattern =~ pull_request['head']['ref']).nil?
+    state = is_success ? 'success' : 'error'
+    description = is_success ? 'The branch name is okay' : 'The branch name doesn\'t match the pattern'
+
+    @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
+      context: 'sheriff/branch',
       description: description,
     })
   end

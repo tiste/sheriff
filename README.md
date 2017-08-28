@@ -48,6 +48,14 @@ When all commit messages of your pull request are respecting the conventionalcom
 
 > Github events: "Pull Request"
 
+### /branch
+
+When your pull request branch name match with the given pattern, it will pass the status check to green, otherwise red.
+
+> You can configure the branch name pattern with the query param `?pattern=.*`
+
+> Github events: "Pull Request"
+
 ## Run it locally
 
 `rake db:create && rake db:migrate`

@@ -22,5 +22,14 @@ FEATURES = {
     description: 'When all commit messages of your pull request are respecting the conventionalcommits.org, it will pass the status check to green, otherwise red.',
     options: {},
     github_events: ['pull_request']
-  }
+  },
+  branch: {
+    name: 'branch',
+    description: 'When your pull request branch name match with the given pattern, it will pass the status check to green, otherwise red.'\
+      'You can configure the branch name pattern with the query param `?pattern=.*`',
+    options: {
+      pattern: '.*'
+    },
+    github_events: ['pull_request']
+  },
 }
