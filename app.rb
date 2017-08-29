@@ -154,7 +154,7 @@ helpers do
     issue = @client.issue(pull_request['base']['repo']['full_name'], pull_request['number'])
 
     is_success = !issue.labels.select { |l| l[:name].downcase === name.downcase }.empty?
-    state = is_success ? 'success' : 'error'
+    state = is_success ? 'success' : 'failure'
     description = is_success ? "The \"#{name}\" label is attached, go for it" : "Pull Request doesn't have the label \"#{name}\" yet"
 
     @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
@@ -167,7 +167,7 @@ helpers do
     reviews = @client.pull_request_reviews(pull_request['base']['repo']['full_name'], pull_request['number'])
 
     is_success = reviews.sort_by { |r| r[:id] }.reverse!.uniq { |r| r[:user][:id] }.select { |r| r[:state] === 'APPROVED' }.size >= minimum
-    state = is_success ? 'success' : 'error'
+    state = is_success ? 'success' : 'failure'
     description = is_success ? "There is at least #{minimum} or more approvals, it's okay" : "Pull Request doesn't have enough reviews (#{minimum})"
 
     @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
@@ -182,7 +182,7 @@ helpers do
 
     errors = commits.map { |c| c[:commit] }.map { |c| c[:message] }.map { |c| COMMIT_MSG_REGEX =~ c }.select(&:nil?).count
     is_success = errors === 0
-    state = is_success ? 'success' : 'error'
+    state = is_success ? 'success' : 'failure'
     description = is_success ? "All commit messages are okay" : "Some commits (#{errors}) have invalid messages"
 
     @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
@@ -193,7 +193,7 @@ helpers do
 
   def process_branch(pull_request, pattern)
     is_success = !(pattern =~ pull_request['head']['ref']).nil?
-    state = is_success ? 'success' : 'error'
+    state = is_success ? 'success' : 'failure'
     description = is_success ? 'The branch name is okay' : 'The branch name doesn\'t match the pattern'
 
     @client.create_status(pull_request['base']['repo']['full_name'], pull_request['head']['sha'], state, {
