@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./images/logo.png" alt="Sheriff">
+  <img src="./public/images/logo.png" alt="Sheriff">
 </p>
 
 > "Don't merge that pull request because I'm not okay with it. You listen to me? Uh..."
@@ -8,7 +8,7 @@
 
 ## What is it?
 
-<img src="./images/checks.png" alt="What is it?">
+<img src="./public/images/checks.png" alt="What is it?">
 
 ## Install
 
