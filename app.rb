@@ -176,7 +176,7 @@ helpers do
     })
   end
 
-  COMMIT_MSG_REGEX = /^((\w+)(?:\(([^\)\s]+)\))?: (.+))(?:\n|$)/
+  COMMIT_MSG_REGEX = /^((\w+)(?:\(([^\)\s]+)\))?: ([^A-Z].+))(?:\n|$)/
   def process_commit_msg(pull_request)
     commits = @client.pull_request_commits(pull_request['base']['repo']['full_name'], pull_request['number'])
 
