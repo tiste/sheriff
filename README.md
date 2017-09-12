@@ -58,4 +58,18 @@ When your pull request branch name match with the given pattern, it will pass th
 
 ## Run it locally
 
+### Init project
+
+Install ruby.
+
+Install dependencies: `bundle install`
+
+### Init db (with postgres)
+
 `rake db:create && rake db:migrate`
+
+### Run the server :rocket:
+
+`GITHUB_APP_CLIENT_ID=b7fd2dec8e245b4b702b GITHUB_APP_SECRET_ID=1b9a880e1b49ff1f077be64dfcabbdf0475f4ad0 puma`
+
+> You can choose to create your own OAuth app (via Github) and use your own credentials
