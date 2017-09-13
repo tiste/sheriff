@@ -18,7 +18,7 @@ const conf = convict({
     DATABASE_URL: {
         doc: 'The database url.',
         format: String,
-        default: '',
+        default: 'postgresql://localhost:5432/sheriff',
         env: 'DATABASE_URL',
     },
 });

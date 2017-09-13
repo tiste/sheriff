@@ -60,13 +60,15 @@ When your pull request branch name match with the given pattern, it will pass th
 
 ### Init project
 
-Install ruby.
+Install node.
 
-Install dependencies: `bundle install`
+Install dependencies: `npm i`
 
 ### Init db (with postgres)
 
-`rake db:create && rake db:migrate`
+`DATABASE_URL=postgresql://localhost:5432/postgres db-migrate db:drop sheriff`
+`DATABASE_URL=postgresql://localhost:5432/postgres db-migrate db:create sheriff`
+`DATABASE_URL=postgresql://localhost:5432/sheriff db-migrate up`
 
 ### Run the server :rocket:
 
