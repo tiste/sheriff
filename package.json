@@ -1,0 +1,33 @@
+{
+  "name": "sheriff",
+  "version": "0.0.1",
+  "scripts": {
+    "lint": "eslint .",
+    "start": "nodemon --exec babel-node -- app.js --inspect"
+  },
+  "dependencies": {
+    "babel-cli": "6.26.0",
+    "babel-eslint": "8.0.0",
+    "babel-plugin-transform-runtime": "6.23.0",
+    "babel-preset-env": "1.6.0",
+    "body-parser": "1.18.1",
+    "convict": "4.0.0",
+    "express": "4.15.4",
+    "hat": "0.0.3",
+    "morgan": "1.8.2",
+    "nodemon": "1.12.0",
+    "passport": "0.4.0",
+    "passport-github": "1.1.0",
+    "passport-localapikey": "0.0.3",
+    "pg": "7.3.0",
+    "pug": "0.1.0"
+  },
+  "devDependencies": {
+    "chai": "4.1.2",
+    "chai-as-promised": "7.1.1",
+    "eslint": "4.6.1",
+    "eslint-config-plazza": "1.1.0",
+    "mocha": "3.5.3",
+    "supertest": "3.0.0"
+  }
+}
