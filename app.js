@@ -11,6 +11,7 @@ import { Strategy as LocalAPIKeyStrategy } from 'passport-localapikey';
 import { Strategy as GitHubStrategy } from 'passport-github';
 import { query } from './lib/pg';
 import * as userService from './lib/userService';
+import { FEATURES } from './lib/features';
 
 import { router as featuresRouter } from './routes/features';
 import { router as githubRouter } from './routes/github';
@@ -81,23 +82,27 @@ app.use(passport.session());
 
 // app
 
-app.use(featuresRouter);
-app.use('/github', githubRouter);
+app.get('/', (req, res) => {
 
-app.get('/login', (req, res) => {
-
-    res.redirect('/github/login');
+    res.render('home', { user: req.user, features: FEATURES });
 });
 
-app.get('/', userService.ensureAuthenticated, (req, res) => {
+app.get('/me', userService.ensureAuthenticated, (req, res) => {
 
     res.send(req.user);
 });
+
+app.use('/', featuresRouter);
+app.use('/github', githubRouter);
 
 // error handler
 
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
     console.error(err.stack); // eslint-disable-line no-console
+
+    if (isNaN(err.status)) {
+        err.status = 500;
+    }
 
     res.status(err.status || 404);
     res.send({

@@ -1,0 +1,29 @@
+extends layout.pug
+
+block content
+    .columns
+        .column.content
+            .has-text-centered
+                h1.title.is-1= feature.name
+                :markdown-it= feature.description
+
+            form.mtl(method='post', action='/setup')
+                input(type='text', name='name', value=feature.name, hidden)
+
+                .field
+                    label.label(for='repo') Repository
+                    .control
+                        input#repo.input(type='text', name='repo', placeholder="eg: user/repo", required)
+
+                each v, k in feature.options
+                    .field
+                        label.label(for=k)= k.charAt(0).toUpperCase() + k.slice(1)
+                        .control
+                            input.input(type='text', name='options[' + k + ']', id=k, value=v, required)
+
+                .field
+                    .control
+                        input.button.is-primary(type='submit')
+
+            .mtl
+                small e.g: http://sheriff.tiste.io/#{feature.name}

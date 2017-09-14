@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/login', passport.authenticate('github'));
 
-router.get('/callback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
+router.get('/callback', passport.authenticate('github', { failureRedirect: '/' }), (req, res) => {
 
     res.redirect('/?token=' + req.user.token);
 });
