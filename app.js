@@ -8,7 +8,11 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import passport from 'passport';
 import { Strategy as LocalAPIKeyStrategy } from 'passport-localapikey';
+import { Strategy as GitHubStrategy } from 'passport-github';
 import { query } from './lib/pg';
+import * as userService from './lib/userService';
+
+import { router as githubRouter } from './routes/github';
 
 const app = express();
 const server = require('http').Server(app);
@@ -18,16 +22,39 @@ const server = require('http').Server(app);
 
 console.log(`Current env: ${conf.get('NODE_ENV')}`); // eslint-disable-line no-console
 
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+    done(null, user);
+});
+
 passport.use(new LocalAPIKeyStrategy({ apiKeyField: 'token' }, (token, done) => {
 
-    query('SELECT * FROM users WHERE token = $1', [token]).then((rows) => {
-        console.log(rows);
+    userService.login(token).then((user) => {
 
+        return done(null, user);
+    }).catch((e) => done(e, false));
+}));
+
+passport.use(new GitHubStrategy({
+    clientID: conf.get('GITHUB_APP_CLIENT_ID'),
+    clientSecret: conf.get('GITHUB_APP_SECRET_ID'),
+}, (accessToken, refreshToken, profile, done) => {
+
+    query('SELECT * FROM users WHERE user_id = $1 AND provider = $2', [profile.id, 'github']).then(({ rows }) => {
         if (!rows[0]) {
-            return done(null, false);
+            return userService.save(profile.id, 'github', accessToken).then((user) => {
+
+                return done(null, user);
+            }).catch((e) => done(e, false));
         }
 
-        return done(null, rows[0]);
+        userService.update(profile.id, 'github', accessToken, rows[0].token).then((user) => {
+
+            return done(null, user);
+        }).catch((e) => done(e, false));
     }).catch((e) => done(e, false));
 }));
 
@@ -52,8 +79,16 @@ app.use(passport.session());
 
 // app
 
-app.get('/', passport.authenticate('localapikey'), async function (req, res) {
-    await res.send('ok');
+app.use('/github', githubRouter);
+
+app.get('/login', (req, res) => {
+
+    res.redirect('/github/login');
+});
+
+app.get('/', userService.ensureAuthenticated, (req, res) => {
+
+    res.send(req.user);
 });
 
 // error handler
@@ -63,7 +98,7 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 
     res.status(err.status || 404);
     res.send({
-        message: [err.message],
+        message: err.message,
     });
 });
 
