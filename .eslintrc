@@ -18,6 +18,7 @@
         "no-param-reassign": 0,
         "no-plusplus": 0,
         "no-unsafe-negation": 0,
+        "no-useless-escape": 0,
         "strict": 0
     }
 }

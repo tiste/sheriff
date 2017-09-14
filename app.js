@@ -12,6 +12,7 @@ import { Strategy as GitHubStrategy } from 'passport-github';
 import { query } from './lib/pg';
 import * as userService from './lib/userService';
 
+import { router as featuresRouter } from './routes/features';
 import { router as githubRouter } from './routes/github';
 
 const app = express();
@@ -41,6 +42,7 @@ passport.use(new LocalAPIKeyStrategy({ apiKeyField: 'token' }, (token, done) => 
 passport.use(new GitHubStrategy({
     clientID: conf.get('GITHUB_APP_CLIENT_ID'),
     clientSecret: conf.get('GITHUB_APP_SECRET_ID'),
+    scope: ['repo', 'write:repo_hook'],
 }, (accessToken, refreshToken, profile, done) => {
 
     query('SELECT * FROM users WHERE user_id = $1 AND provider = $2', [profile.id, 'github']).then(({ rows }) => {
@@ -79,6 +81,7 @@ app.use(passport.session());
 
 // app
 
+app.use(featuresRouter);
 app.use('/github', githubRouter);
 
 app.get('/login', (req, res) => {
