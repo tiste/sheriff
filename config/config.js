@@ -9,6 +9,12 @@ const conf = convict({
         default: 'development',
         env: 'NODE_ENV',
     },
+    APP_URL: {
+        doc: 'The app url.',
+        format: String,
+        default: 'http://localhost:3000',
+        env: 'APP_URL',
+    },
     DATABASE_URL: {
         doc: 'The database url.',
         format: String,
