@@ -28,4 +28,4 @@ block content
             .mtl
                 - options = JSON.parse(JSON.stringify(feature.options))
                 - options.token = user.token
-                small e.g: #{APP_URL}/#{feature.name}?#{stringify(options)}
+                small e.g: #{APP_URL}/#{user.provider}/#{feature.name}?#{stringify(options)}
