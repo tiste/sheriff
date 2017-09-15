@@ -26,4 +26,6 @@ block content
                         input.button.is-primary(type='submit')
 
             .mtl
-                small e.g: http://sheriff.tiste.io/#{feature.name}
+                - options = JSON.parse(JSON.stringify(feature.options))
+                - options.token = user.token
+                small e.g: http://sheriff.tiste.io/#{feature.name}?#{stringify(options)}

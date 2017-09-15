@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get(`/:feature(${_.keys(FEATURES).join('|')})`, userService.ensureAuthenticated, (req, res) => {
 
-    res.render('feature', { user: req.user, feature: FEATURES[req.params.feature] });
+    res.render('feature', { user: req.user, feature: FEATURES[req.params.feature], stringify: querystring.stringify });
 });
 
 router.post('/setup', userService.ensureAuthenticated, (req, res, next) => {

@@ -19,7 +19,7 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
     if (['pull_request'].includes(req.get('x-github-event'))) {
 
         const pullRequest = JSON.parse(req.body.payload).pull_request;
-        const label = req.query.name || FEATURES.label.options.name;
+        const label = req.query.name;
 
         const github = new Github(req.user.accessToken);
         return github.processLabel(pullRequest.base.user.login, pullRequest.base.repo.name, pullRequest.number, pullRequest.head.sha, label).then(() => {
@@ -35,7 +35,7 @@ router.post('/reviews', passport.authenticate('localapikey'), (req, res, next) =
     if (['pull_request', 'pull_request_review'].includes(req.get('x-github-event'))) {
 
         const pullRequest = JSON.parse(req.body.payload).pull_request;
-        const minimum = parseInt(req.query.minimum || FEATURES.reviews.options.minimum, 10);
+        const minimum = req.query.minimum && parseInt(req.query.minimum, 10);
 
         const github = new Github(req.user.accessToken);
         return github.processReviews(pullRequest.base.user.login, pullRequest.base.repo.name, pullRequest.number, pullRequest.head.sha, minimum).then(() => {
@@ -62,7 +62,7 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
     if (['pull_request'].includes(req.get('x-github-event'))) {
 
         const pullRequest = JSON.parse(req.body.payload).pull_request;
-        const pattern = new RegExp(req.query.pattern || FEATURES.branch.options.pattern);
+        const pattern = req.query.pattern && new RegExp(req.query.pattern);
 
         const github = new Github(req.user.accessToken);
         return github.processBranch(pullRequest.base.user.login, pullRequest.base.repo.name, pullRequest.head.sha, pullRequest.head.ref, pattern).then(() => {
