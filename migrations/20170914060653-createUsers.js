@@ -17,7 +17,7 @@ exports.up = function (db) {
             access_token: 'string',
             provider: 'string',
             token: { type: 'string', unique: true },
-            user_id: { type: 'string', unique: true },
+            user_id: 'string',
         }),
     ]).then(() => {
         return Promise.all([
