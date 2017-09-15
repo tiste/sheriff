@@ -27,7 +27,7 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
         }).catch(next);
     }
 
-    res.sendStatus(500);
+    res.sendStatus(200);
 });
 
 router.post('/reviews', passport.authenticate('localapikey'), (req, res, next) => {
@@ -42,6 +42,8 @@ router.post('/reviews', passport.authenticate('localapikey'), (req, res, next) =
             res.sendStatus(200);
         }).catch(next);
     }
+
+    res.sendStatus(200);
 });
 
 router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next) => {
@@ -55,6 +57,8 @@ router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next
             res.sendStatus(200);
         }).catch(next);
     }
+
+    res.sendStatus(200);
 });
 
 router.post('/branch', passport.authenticate('localapikey'), (req, res, next) => {
@@ -69,6 +73,8 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
             res.sendStatus(200);
         }).catch(next);
     }
+
+    res.sendStatus(200);
 });
 
 export { router };
