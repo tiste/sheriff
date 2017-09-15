@@ -1,0 +1,24 @@
+{
+    "root": true,
+    "extends": [
+        "eslint:recommended",
+        "plazza/node"
+    ],
+    "env": {
+        "es6": true,
+        "node": true,
+        "mocha": true,
+        "jasmine": true
+    },
+    "rules": {
+        "arrow-parens": 0,
+        "camelcase": 0,
+        "consistent-return": 0,
+        "no-negated-in-lhs": 0,
+        "no-param-reassign": 0,
+        "no-plusplus": 0,
+        "no-unsafe-negation": 0,
+        "no-useless-escape": 0,
+        "strict": 0
+    }
+}

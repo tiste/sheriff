@@ -1,0 +1,16 @@
+extends layout.pug
+
+block content
+    .columns
+        .column.content
+            .has-text-centered
+                img(src='images/logo.png', alt='Sheriff', style='width: 20%')
+
+                .columns.mtl
+                    if !user
+                        .column.is-full
+                            a.button.is-primary(href='/github/login') Login with Github?
+                    else
+                        each feature in features
+                            .column
+                                a.button.is-primary(href=feature.name)= feature.name
