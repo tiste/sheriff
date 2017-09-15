@@ -22,7 +22,9 @@ Add a new webhook to your Github repo, then choose a [feature](#features), appen
 
 Base URL: http://sheriff.tiste.io
 
-Example: http://sheriff.tiste.io/reviews?minimum=3&token=foobar
+Providers: `['github', 'gitlab']`
+
+Example: http://sheriff.tiste.io/github/reviews?minimum=3&token=foobar
 
 ## Features
 
@@ -74,4 +76,4 @@ Install dependencies: `npm i`
 
 `npm start`
 
-> You can choose to create your own OAuth app (via Github) and use your own credentials into `GITHUB_APP_CLIENT_ID` and `GITHUB_APP_SECRET_ID`
+> You can choose to create your own OAuth app (via Github/Gitlab) and use your own credentials into `GITHUB_APP_CLIENT_ID` or `GITLAB_APP_CLIENT_ID` and `GITHUB_APP_SECRET_ID` or `GITLAB_APP_SECRET_ID`

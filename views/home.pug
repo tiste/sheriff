@@ -8,8 +8,11 @@ block content
 
                 .columns.mtl
                     if !user
-                        .column.is-full
+                        .column.is-half
                             a.button.is-primary(href='/github/login') Login with Github?
+
+                        .column.is-half
+                            a.button.is-primary(href='/gitlab/login') Login with Gitlab?
                     else
                         each feature in features
                             .column
