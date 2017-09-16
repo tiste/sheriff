@@ -1,5 +1,7 @@
 'use strict';
 
+import 'newrelic';
+
 import express from 'express';
 import conf from './config/config';
 import path from 'path';
