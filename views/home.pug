@@ -15,5 +15,6 @@ block content
                             a.button.is-primary(href='/gitlab/login') Login with Gitlab?
                     else
                         each feature in features
-                            .column
-                                a.button.is-primary(href=feature.name)= feature.name
+                            if !(user.provider === 'gitlab' && feature.name === 'reviews')
+                                .column
+                                    a.button.is-primary(href=feature.name)= feature.name
