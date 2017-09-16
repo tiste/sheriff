@@ -2,7 +2,6 @@
 
 import express from 'express';
 import passport from 'passport';
-import { FEATURES } from '../lib/features';
 import { Github } from '../lib/github';
 
 const router = express.Router();

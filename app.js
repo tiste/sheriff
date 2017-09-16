@@ -8,13 +8,15 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import passport from 'passport';
 import { Strategy as LocalAPIKeyStrategy } from 'passport-localapikey';
-import { Strategy as GitHubStrategy } from 'passport-github';
+import { Strategy as GithubStrategy } from 'passport-github';
+import { Strategy as GitlabStrategy } from 'passport-gitlab2';
 import { query } from './lib/pg';
 import * as userService from './lib/userService';
 import { FEATURES } from './lib/features';
 
 import { router as featuresRouter } from './routes/features';
 import { router as githubRouter } from './routes/github';
+import { router as gitlabRouter } from './routes/gitlab';
 
 const app = express();
 const server = require('http').Server(app);
@@ -40,7 +42,7 @@ passport.use(new LocalAPIKeyStrategy({ apiKeyField: 'token' }, (token, done) => 
     }).catch((e) => done(e, false));
 }));
 
-passport.use(new GitHubStrategy({
+passport.use(new GithubStrategy({
     clientID: conf.get('GITHUB_APP_CLIENT_ID'),
     clientSecret: conf.get('GITHUB_APP_SECRET_ID'),
     scope: ['repo', 'write:repo_hook'],
@@ -55,6 +57,28 @@ passport.use(new GitHubStrategy({
         }
 
         userService.update(profile.id, 'github', accessToken, rows[0].token).then((user) => {
+
+            return done(null, user);
+        }).catch((e) => done(e, false));
+    }).catch((e) => done(e, false));
+}));
+
+passport.use(new GitlabStrategy({
+    clientID: conf.get('GITLAB_APP_CLIENT_ID'),
+    clientSecret: conf.get('GITLAB_APP_SECRET_ID'),
+    callbackURL: `${conf.get('APP_URL')}/gitlab/callback`,
+    scope: ['api'],
+}, (accessToken, refreshToken, profile, done) => {
+
+    query('SELECT * FROM users WHERE user_id = $1 AND provider = $2', [profile.id, 'gitlab']).then(({ rows }) => {
+        if (!rows[0]) {
+            return userService.save(profile.id, 'gitlab', accessToken).then((user) => {
+
+                return done(null, user);
+            }).catch((e) => done(e, false));
+        }
+
+        userService.update(profile.id, 'gitlab', accessToken, rows[0].token).then((user) => {
 
             return done(null, user);
         }).catch((e) => done(e, false));
@@ -94,6 +118,7 @@ app.get('/me', userService.ensureAuthenticated, (req, res) => {
 
 app.use('/', featuresRouter);
 app.use('/github', githubRouter);
+app.use('/gitlab', gitlabRouter);
 
 // error handler
 
