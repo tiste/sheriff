@@ -5,6 +5,9 @@
     "lint": "eslint .",
     "start": "nodemon --exec babel-node -- app.js --inspect"
   },
+  "bin": {
+    "sheriff": "cli.js"
+  },
   "dependencies": {
     "babel-cli": "6.26.0",
     "babel-eslint": "8.0.0",
@@ -20,6 +23,7 @@
     "hat": "0.0.3",
     "jstransformer-markdown-it": "2.0.0",
     "lodash": "4.17.4",
+    "meow": "3.7.0",
     "morgan": "1.8.2",
     "newrelic": "2.2.1",
     "node-gitlab": "tiste/gitlab",

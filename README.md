@@ -26,6 +26,19 @@ Providers: `['github', 'gitlab']`
 
 Example: http://sheriff.tiste.io/github/reviews?minimum=3&token=foobar
 
+## CLI
+
+```
+$ sheriff --help
+
+  Usage
+    $ sheriff <feature> [--param=<value>]
+
+  Example
+    $ sheriff commitMsg --commits='feat: foobar'
+    { isSuccesss: true, description: 'All commit messages are okay' }
+```
+
 ## Features
 
 ### /label
