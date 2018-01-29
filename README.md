@@ -90,3 +90,7 @@ Install dependencies: `npm i`
 `npm start`
 
 > You can choose to create your own OAuth app (via Github/Gitlab) and use your own credentials into `GITHUB_APP_CLIENT_ID` or `GITLAB_APP_CLIENT_ID` and `GITHUB_APP_SECRET_ID` or `GITLAB_APP_SECRET_ID`
+
+### Tests
+
+`npm run test -- -watch`
