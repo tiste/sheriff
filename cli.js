@@ -12,7 +12,7 @@ const cli = meow(`
 	  $ sheriff <feature> [--param=<value>]
 	Example
 	  $ sheriff commitMsg --commits='feat: foobar'
-	  { isSuccesss: true, description: 'All commit messages are okay' }
+	  { isSuccess: true, description: 'All commit messages are okay' }
 `);
 
 const feature = cli.input[0];

@@ -26,7 +26,7 @@ router.post('/setup', userService.ensureAuthenticated, (req, res, next) => {
         const github = new Github(req.user.accessToken);
         const [owner, repo] = req.body.repo.split('/');
 
-        github.createHook(owner, repo, feature.github_events, url).then(() => {
+        github.createHook({ owner, repo }, feature.github_events, url).then(() => {
             res.redirect('/');
         }).catch(next);
     }

@@ -19,9 +19,14 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
 
         const pullRequest = JSON.parse(req.body.payload).pull_request;
         const label = req.query.name;
+        const baseBranch = req.query.branch;
+
+        if (baseBranch && pullRequest.base.ref !== baseBranch) {
+            return res.sendStatus(204);
+        }
 
         const github = new Github(req.user.accessToken);
-        return github.processLabel(pullRequest.base.user.login, pullRequest.base.repo.name, pullRequest.number, pullRequest.head.sha, label).then(() => {
+        return github.processLabel({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, label).then(() => {
             res.sendStatus(200);
         }).catch(next);
     }
@@ -37,7 +42,7 @@ router.post('/reviews', passport.authenticate('localapikey'), (req, res, next) =
         const minimum = req.query.minimum && parseInt(req.query.minimum, 10);
 
         const github = new Github(req.user.accessToken);
-        return github.processReviews(pullRequest.base.user.login, pullRequest.base.repo.name, pullRequest.number, pullRequest.head.sha, minimum).then(() => {
+        return github.processReviews({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, minimum).then(() => {
             res.sendStatus(200);
         }).catch(next);
     }
@@ -52,7 +57,7 @@ router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next
         const pullRequest = JSON.parse(req.body.payload).pull_request;
 
         const github = new Github(req.user.accessToken);
-        return github.processCommitMsg(pullRequest.base.user.login, pullRequest.base.repo.name, pullRequest.number, pullRequest.head.sha).then(() => {
+        return github.processCommitMsg({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number).then(() => {
             res.sendStatus(200);
         }).catch(next);
     }
@@ -68,7 +73,7 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
         const pattern = req.query.pattern && new RegExp(req.query.pattern);
 
         const github = new Github(req.user.accessToken);
-        return github.processBranch(pullRequest.base.user.login, pullRequest.base.repo.name, pullRequest.head.sha, pullRequest.head.ref, pattern).then(() => {
+        return github.processBranch({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.head.ref, pattern).then(() => {
             res.sendStatus(200);
         }).catch(next);
     }

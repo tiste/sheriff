@@ -19,10 +19,11 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
 
         const pullRequest = req.body;
         const label = req.query.name;
+        const baseBranch = req.query.branch;
 
         const gitlab = new Gitlab(req.user.accessToken);
-        return gitlab.processLabel(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, label).then(() => {
-            res.sendStatus(200);
+        return gitlab.processLabel(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, label, baseBranch).then((statusCode) => {
+            res.sendStatus(statusCode || 200);
         }).catch(next);
     }
 
