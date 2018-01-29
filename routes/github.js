@@ -2,6 +2,7 @@
 
 import express from 'express';
 import passport from 'passport';
+import minimatch from 'minimatch';
 import { Github } from '../lib/github';
 
 const router = express.Router();
@@ -21,7 +22,7 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
         const label = req.query.name;
         const baseBranch = req.query.branch;
 
-        if (baseBranch && pullRequest.base.ref !== baseBranch) {
+        if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
             return res.sendStatus(204);
         }
 
