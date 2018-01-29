@@ -50,7 +50,7 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
     if (['Merge Request Hook'].includes(req.get('x-gitlab-event'))) {
 
         const pullRequest = req.body;
-        const pattern = req.query.pattern && new RegExp(req.query.pattern);
+        const pattern = req.query.pattern;
 
         const gitlab = new Gitlab(req.user.accessToken);
         return gitlab.processBranch(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, pullRequest.object_attributes.source_branch, pattern).then(() => {

@@ -151,13 +151,13 @@ describe('-- Sheriff tests --', () => {
 
         it('Valid with specified branch pattern', () => {
 
-            const result = sheriff.branch('foo-branch-JIRA-358', new RegExp('.+JIRA-[0-9]+'));
+            const result = sheriff.branch('foo-branch-JIRA-359', '*JIRA-[0-9]*');
             result.isSuccess.should.be.true;
         });
 
         it('Refuse with specified branch pattern', () => {
 
-            const result = sheriff.branch('foo-branch-JIRA', new RegExp('.+JIRA-[0-9]+'));
+            const result = sheriff.branch('foo-branch-JIRA', '*JIRA-[0-9]*');
             result.should.be.eql({
                 isSuccess: false,
                 description: 'The branch name doesn\'t match the pattern',

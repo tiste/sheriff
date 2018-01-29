@@ -67,7 +67,7 @@ When all commit messages of your pull request are respecting the conventionalcom
 
 When your pull request branch name match with the given pattern, it will pass the status check to green, otherwise red.
 
-> You can configure the branch name pattern with the query param `?pattern=.*`
+> You can configure the branch name pattern with the query param `?pattern=*` as a [glob](https://github.com/isaacs/minimatch) syntax
 
 > Github events: "Pull Request"
 

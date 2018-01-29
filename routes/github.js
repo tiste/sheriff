@@ -70,7 +70,7 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
     if (['pull_request'].includes(req.get('x-github-event'))) {
 
         const pullRequest = JSON.parse(req.body.payload).pull_request;
-        const pattern = req.query.pattern && new RegExp(req.query.pattern);
+        const pattern = req.query.pattern;
 
         const github = new Github(req.user.accessToken);
         return github.processBranch({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.head.ref, pattern).then(() => {
