@@ -93,4 +93,6 @@ Install dependencies: `npm i`
 
 ### Tests
 
+`npm run noreg`
+
 `npm run test -- -watch`

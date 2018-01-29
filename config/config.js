@@ -47,4 +47,4 @@ const conf = convict({
     },
 });
 
-module.exports = conf;
+export default conf;
