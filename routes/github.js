@@ -3,7 +3,7 @@
 import express from 'express';
 import passport from 'passport';
 import minimatch from 'minimatch';
-import { Github } from '../lib/github';
+import Github from '../lib/github';
 
 const router = express.Router();
 
@@ -82,4 +82,4 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
     res.sendStatus(200);
 });
 
-export { router };
+export default router;

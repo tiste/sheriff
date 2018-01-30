@@ -5,9 +5,9 @@ import express from 'express';
 import querystring from 'querystring';
 import conf from '../config/config';
 import * as userService from '../lib/userService';
-import { FEATURES } from '../lib/features';
-import { Github } from '../lib/github';
-import { Gitlab } from '../lib/gitlab';
+import FEATURES from '../lib/features';
+import Github from '../lib/github';
+import Gitlab from '../lib/gitlab';
 
 const router = express.Router();
 
@@ -39,4 +39,4 @@ router.post('/setup', userService.ensureAuthenticated, (req, res, next) => {
     }
 });
 
-export { router };
+export default router;

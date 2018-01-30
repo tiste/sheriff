@@ -2,7 +2,7 @@
 
 import express from 'express';
 import passport from 'passport';
-import { Gitlab } from '../lib/gitlab';
+import Gitlab from '../lib/gitlab';
 
 const router = express.Router();
 
@@ -61,4 +61,4 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
     res.sendStatus(200);
 });
 
-export { router };
+export default router;
