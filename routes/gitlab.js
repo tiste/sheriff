@@ -35,10 +35,11 @@ router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next
     if (['Merge Request Hook'].includes(req.get('x-gitlab-event'))) {
 
         const pullRequest = req.body;
+        const baseBranch = req.query.branch;
 
         const gitlab = new Gitlab(req.user.accessToken);
-        return gitlab.processCommitMsg(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id).then(() => {
-            res.sendStatus(200);
+        return gitlab.processCommitMsg(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, baseBranch).then((statusCode) => {
+            res.sendStatus(statusCode || 200);
         }).catch(next);
     }
 

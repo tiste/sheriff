@@ -41,6 +41,11 @@ router.post('/reviews', passport.authenticate('localapikey'), (req, res, next) =
 
         const pullRequest = JSON.parse(req.body.payload).pull_request;
         const minimum = req.query.minimum && parseInt(req.query.minimum, 10);
+        const baseBranch = req.query.branch;
+
+        if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
+            return res.sendStatus(204);
+        }
 
         const github = new Github(req.user.accessToken);
         return github.processReviews({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, minimum).then(() => {
@@ -56,6 +61,11 @@ router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next
     if (['pull_request'].includes(req.get('x-github-event'))) {
 
         const pullRequest = JSON.parse(req.body.payload).pull_request;
+        const baseBranch = req.query.branch;
+
+        if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
+            return res.sendStatus(204);
+        }
 
         const github = new Github(req.user.accessToken);
         return github.processCommitMsg({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number).then(() => {
