@@ -3,6 +3,7 @@
 import express from 'express';
 import passport from 'passport';
 import minimatch from 'minimatch';
+import Slack from 'slack-node';
 import Github from '../lib/github';
 
 const router = express.Router();
@@ -18,17 +19,28 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
 
     if (['pull_request'].includes(req.get('x-github-event'))) {
 
+        const action = JSON.parse(req.body.payload).action;
         const pullRequest = JSON.parse(req.body.payload).pull_request;
         const label = req.query.name;
         const baseBranch = req.query.branch;
 
         if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
-            return res.sendStatus(204);
+            return res.send({ isSuccess: false });
         }
 
         const github = new Github(req.user.accessToken);
-        return github.processLabel({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, label).then(() => {
-            res.sendStatus(200);
+        return github.processLabel({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, label).then((status) => {
+
+            if (['opened', 'labeled'].includes(action) && req.user.slackUrl && status.isSuccess) {
+                const slack = new Slack();
+                slack.setWebhook(req.user.slackUrl);
+
+                slack.webhook({
+                    text: `New PR as ${label} for branch <https://github.com/${pullRequest.base.user.login}/${pullRequest.base.repo.name}/pull/${pullRequest.number}|${pullRequest.head.ref}> available`,
+                }, () => {});
+            }
+
+            res.send(status);
         }).catch(next);
     }
 
@@ -44,12 +56,12 @@ router.post('/reviews', passport.authenticate('localapikey'), (req, res, next) =
         const baseBranch = req.query.branch;
 
         if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
-            return res.sendStatus(204);
+            return res.send({ isSuccess: false });
         }
 
         const github = new Github(req.user.accessToken);
-        return github.processReviews({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, minimum).then(() => {
-            res.sendStatus(200);
+        return github.processReviews({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, minimum).then((status) => {
+            res.send(status);
         }).catch(next);
     }
 
@@ -64,12 +76,12 @@ router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next
         const baseBranch = req.query.branch;
 
         if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
-            return res.sendStatus(204);
+            return res.send({ isSuccess: false });
         }
 
         const github = new Github(req.user.accessToken);
-        return github.processCommitMsg({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number).then(() => {
-            res.sendStatus(200);
+        return github.processCommitMsg({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number).then((status) => {
+            res.send(status);
         }).catch(next);
     }
 
@@ -84,8 +96,8 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
         const pattern = req.query.pattern;
 
         const github = new Github(req.user.accessToken);
-        return github.processBranch({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.head.ref, pattern).then(() => {
-            res.sendStatus(200);
+        return github.processBranch({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.head.ref, pattern).then((status) => {
+            res.send(status);
         }).catch(next);
     }
 

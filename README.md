@@ -1,5 +1,7 @@
 <p align="center">
   <img src="./public/images/logo.png" alt="Sheriff">
+  <br>
+  <a href="https://slack.com/oauth/authorize?client_id=19989196163.310602755904&scope=incoming-webhook"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
 </p>
 
 > "Don't merge that pull request because I'm not okay with it. You listen to me? Uh..."
@@ -9,35 +11,6 @@
 ## What is it?
 
 <img src="./public/images/checks.png" alt="What is it?">
-
-## Install
-
-### Easy way
-
-Just go on the website, choose for a [feature](#features), submit it!
-
-### Manual way
-
-Add a new webhook to your Github repo, then choose a [feature](#features), append your token and options to the URL.
-
-Base URL: http://sheriff.tiste.io
-
-Providers: `['github', 'gitlab']`
-
-Example: http://sheriff.tiste.io/github/reviews?minimum=3&token=foobar
-
-## CLI
-
-```
-$ sheriff --help
-
-  Usage
-    $ sheriff <feature> [--param=<value>]
-
-  Example
-    $ sheriff commitMsg --commits='feat: foobar'
-    { isSuccesss: true, description: 'All commit messages are okay' }
-```
 
 ## Features
 
@@ -70,6 +43,39 @@ When your pull request branch name match with the given pattern, it will pass th
 > You can configure the branch name pattern with the query param `?pattern=*` as a [glob](https://github.com/isaacs/minimatch) syntax
 
 > Github events: "Pull Request"
+
+## CLI
+
+```
+$ sheriff --help
+
+  Usage
+    $ sheriff <feature> [--param=<value>]
+
+  Example
+    $ sheriff commitMsg --commits='feat: foobar'
+    { isSuccesss: true, description: 'All commit messages are okay' }
+```
+
+## Install
+
+### Easy way (SaaS)
+
+Just go on the website, choose for a [feature](#features), submit it!
+
+You can also choose to publish success updates of the label Sheriff on your Slack channel.
+
+<a href="https://slack.com/oauth/authorize?client_id=19989196163.310602755904&scope=incoming-webhook"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+
+### Manual way
+
+Add a new webhook to your Github repo, then choose a [feature](#features), append your token and options to the URL.
+
+Base URL: http://sheriff.tiste.io
+
+Providers: `['github', 'gitlab']`
+
+Example: http://sheriff.tiste.io/github/reviews?minimum=3&token=foobar
 
 ## Run it locally
 

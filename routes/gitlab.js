@@ -22,8 +22,8 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
         const baseBranch = req.query.branch;
 
         const gitlab = new Gitlab(req.user.accessToken);
-        return gitlab.processLabel(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, label, baseBranch).then((statusCode) => {
-            res.sendStatus(statusCode || 200);
+        return gitlab.processLabel(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, label, baseBranch).then((status) => {
+            res.send(status);
         }).catch(next);
     }
 
@@ -38,8 +38,8 @@ router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next
         const baseBranch = req.query.branch;
 
         const gitlab = new Gitlab(req.user.accessToken);
-        return gitlab.processCommitMsg(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, baseBranch).then((statusCode) => {
-            res.sendStatus(statusCode || 200);
+        return gitlab.processCommitMsg(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, baseBranch).then((status) => {
+            res.send(status);
         }).catch(next);
     }
 
@@ -54,8 +54,8 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
         const pattern = req.query.pattern;
 
         const gitlab = new Gitlab(req.user.accessToken);
-        return gitlab.processBranch(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, pullRequest.object_attributes.source_branch, pattern).then(() => {
-            res.sendStatus(200);
+        return gitlab.processBranch(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, pullRequest.object_attributes.source_branch, pattern).then((status) => {
+            res.send(status);
         }).catch(next);
     }
 
