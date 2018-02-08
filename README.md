@@ -71,11 +71,11 @@ You can also choose to publish success updates of the label Sheriff on your Slac
 
 Add a new webhook to your Github repo, then choose a [feature](#features), append your token and options to the URL.
 
-Base URL: http://sheriff.tiste.io
+Base URL: https://sheriff.rocks
 
 Providers: `['github', 'gitlab']`
 
-Example: http://sheriff.tiste.io/github/reviews?minimum=3&token=foobar
+Example: https://sheriff.rocks/github/reviews?minimum=3&token=foobar
 
 ## Run it locally
 
