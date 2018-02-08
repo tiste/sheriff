@@ -4,7 +4,7 @@
   "scripts": {
     "lint": "eslint .",
     "noreg": "mocha test/e2e/**/*.test.js --reporter spec --timeout 120000 --require babel-register --require ./test/config.js",
-    "start": "nodemon --exec babel-node -- app.js --inspect",
+    "start": "nodemon -e js,vue --exec babel-node -- app.js --inspect",
     "test": "mocha test/unit/**/*.test.js --reporter dot --timeout 120000 --require babel-register --require ./test/config.js"
   },
   "bin": {
@@ -21,9 +21,9 @@
     "db-migrate-pg": "0.2.5",
     "express": "4.15.4",
     "express-session": "1.15.5",
+    "express-vue": "4.0.14",
     "github": "11.0.0",
     "hat": "0.0.3",
-    "jstransformer-markdown-it": "2.0.0",
     "lodash": "4.17.4",
     "meow": "3.7.0",
     "minimatch": "3.0.4",
