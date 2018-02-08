@@ -124,7 +124,12 @@ app.use(bodyParser.urlencoded({
     extended: true,
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'keyboard cat' }));
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 3600000 },
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
