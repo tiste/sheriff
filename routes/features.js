@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get(`/:feature(${_.keys(FEATURES).join('|')})`, userService.ensureAuthenticated, (req, res) => {
 
-    res.render('feature', { user: req.user, feature: FEATURES[req.params.feature], stringify: querystring.stringify, APP_URL: conf.get('APP_URL') });
+    res.renderVue('FeaturePage', { title: 'Sheriff', token: _.get(req.user, 'token', ''), feature: FEATURES[req.params.feature] }, { head: { title: 'Sheriff' } });
 });
 
 router.post('/setup', userService.ensureAuthenticated, (req, res, next) => {

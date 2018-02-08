@@ -2,6 +2,7 @@
 
 import 'newrelic';
 
+import _ from 'lodash';
 import express from 'express';
 import conf from './config/config';
 import path from 'path';
@@ -12,9 +13,9 @@ import passport from 'passport';
 import { Strategy as LocalAPIKeyStrategy } from 'passport-localapikey';
 import { Strategy as GithubStrategy } from 'passport-github';
 import { Strategy as GitlabStrategy } from 'passport-gitlab2';
+import expressVue from 'express-vue';
 import { query } from './lib/pg';
 import * as userService from './lib/userService';
-import FEATURES from './lib/features';
 
 import featuresRouter from './routes/features';
 import githubRouter from './routes/github';
@@ -92,6 +93,30 @@ passport.use(new GitlabStrategy({
 
 app.set('view engine', 'pug');
 app.set('trust proxy', true);
+app.use(expressVue.init({
+    rootPath: path.join(__dirname, 'views'),
+    vue: {
+        head: {
+            meta: [
+                {
+                    script: 'https://unpkg.com/vue/dist/vue.js',
+                },
+                {
+                    script: 'https://unpkg.com/vuetify/dist/vuetify.js',
+                },
+                {
+                    script: 'https://unpkg.com/axios/dist/axios.min.js',
+                },
+                {
+                    style: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons',
+                },
+                {
+                    style: 'https://unpkg.com/vuetify/dist/vuetify.min.css',
+                },
+            ],
+        },
+    },
+}));
 
 app.use(logger('combined'));
 app.use(bodyParser.json());
@@ -110,7 +135,7 @@ app.use(passport.session());
 
 app.get('/', (req, res) => {
 
-    res.render('home', { user: req.user, features: FEATURES });
+    res.renderVue('HomePage', { title: 'Sheriff', token: _.get(req.user, 'token', '') }, { head: { title: 'Sheriff' } });
 });
 
 app.get('/me', userService.ensureAuthenticated, (req, res) => {
