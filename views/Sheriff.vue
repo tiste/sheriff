@@ -14,7 +14,7 @@
             <v-form v-model="valid" ref="form">
                 <v-text-field
                     label="Repository"
-                    v-model="formData['repository']"
+                    v-model="repo"
                     required
                 ></v-text-field>
 
@@ -22,7 +22,7 @@
                     v-for="(defaultValue, optionName) in feature.options"
                     :key="optionName"
                     :label="optionName"
-                    v-model="formData[optionName]"
+                    v-model="options[optionName]"
                     required
                 ></v-text-field>
 
@@ -48,13 +48,14 @@
         data() {
             return {
                 valid: true,
-                formData: {},
+                options: {},
+                repo: '',
             };
         },
         methods: {
             submit() {
                 if (this.$refs.form.validate()) {
-                    axios.post('/setup', Object.assign({ name: this.feature.name }, this.formData))
+                    axios.post('/setup', { name: this.feature.name, repo: this.repo, options: this.options })
                         .then(() => location.href = '/')
                         .catch(console.error);
                 }
