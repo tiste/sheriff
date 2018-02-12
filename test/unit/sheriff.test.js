@@ -20,6 +20,17 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: true,
                 description: 'The "Review Done" label is attached, go for it',
+                bypass: false,
+            });
+        });
+
+        it('Valid a label (capital label) with given base branch', () => {
+
+            const result = sheriff.label(['review done'], 'Review Done', ['release-1.0.0', 'release-*']);
+            result.should.be.eql({
+                isSuccess: true,
+                description: 'The "Review Done" label is attached, go for it',
+                bypass: false,
             });
         });
 
@@ -41,6 +52,7 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: false,
                 description: 'Pull Request doesn\'t have the label "mergeable" yet',
+                bypass: false,
             });
         });
 
@@ -48,6 +60,16 @@ describe('-- Sheriff tests --', () => {
 
             const result = sheriff.label([]);
             result.isSuccess.should.be.false;
+        });
+
+        it('Does nothing when the given base branch is not the same as the PR', () => {
+
+            const result = sheriff.label(['review done'], 'Review Done', ['release', 'release-*']);
+            result.should.be.eql({
+                isSuccess: true,
+                description: 'The "Review Done" label is attached, go for it',
+                bypass: true,
+            });
         });
     });
 
@@ -59,6 +81,17 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: true,
                 description: 'There is at least 2 or more approvals, it\'s okay',
+                bypass: false,
+            });
+        });
+
+        it('Valid reviews (default minimum value) with given base branch', () => {
+
+            const result = sheriff.reviews(['APPROVED', 'APPROVED'], 2, ['release-1.0.0', 'release-*']);
+            result.should.be.eql({
+                isSuccess: true,
+                description: 'There is at least 2 or more approvals, it\'s okay',
+                bypass: false,
             });
         });
 
@@ -68,6 +101,7 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: true,
                 description: 'There is at least 3 or more approvals, it\'s okay',
+                bypass: false,
             });
         });
 
@@ -77,6 +111,7 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: false,
                 description: 'Pull Request doesn\'t have enough reviews (3)',
+                bypass: false,
             });
         });
 
@@ -86,6 +121,17 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: false,
                 description: 'There is at least 2 or more approvals, but 1 changes requested',
+                bypass: false,
+            });
+        });
+
+        it('Does nothing when the given base branch is not the same as the PR', () => {
+
+            const result = sheriff.reviews(['APPROVED', 'APPROVED'], 2, ['release', 'release-*']);
+            result.should.be.eql({
+                isSuccess: true,
+                description: 'There is at least 2 or more approvals, it\'s okay',
+                bypass: true,
             });
         });
     });
@@ -98,6 +144,17 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: true,
                 description: 'All commit messages are okay',
+                bypass: false,
+            });
+        });
+
+        it('Valid multiple angular commit messages', () => {
+
+            const result = sheriff.commitMsg(['feat: awesome feature', 'chore: oops'], ['release-1.0.0', 'release-*']);
+            result.should.be.eql({
+                isSuccess: true,
+                description: 'All commit messages are okay',
+                bypass: false,
             });
         });
 
@@ -107,6 +164,7 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: true,
                 description: 'All commit messages are okay',
+                bypass: false,
             });
         });
 
@@ -116,6 +174,7 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: true,
                 description: 'All commit messages are okay',
+                bypass: false,
             });
         });
 
@@ -125,6 +184,7 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: false,
                 description: 'Some commits (1) have invalid messages',
+                bypass: false,
             });
         });
 
@@ -134,6 +194,17 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: false,
                 description: 'Some commits (2) have invalid messages',
+                bypass: false,
+            });
+        });
+
+        it('Does nothing when the given base branch is not the same as the PR', () => {
+
+            const result = sheriff.commitMsg(['feat: awesome feature', 'chore: oops'], ['release', 'release-*']);
+            result.should.be.eql({
+                isSuccess: true,
+                description: 'All commit messages are okay',
+                bypass: true,
             });
         });
     });
@@ -146,6 +217,7 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: true,
                 description: 'The branch name is okay',
+                bypass: false,
             });
         });
 
@@ -161,6 +233,7 @@ describe('-- Sheriff tests --', () => {
             result.should.be.eql({
                 isSuccess: false,
                 description: 'The branch name doesn\'t match the pattern',
+                bypass: false,
             });
         });
     });

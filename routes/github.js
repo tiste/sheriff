@@ -24,14 +24,10 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
         const label = req.query.name;
         const baseBranch = req.query.branch;
 
-        if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
-            return res.send({ isSuccess: false });
-        }
-
         const github = new Github(req.user.accessToken);
-        return github.processLabel({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, label).then((status) => {
+        return github.processLabel({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, label, [pullRequest.base.ref, baseBranch]).then((status) => {
 
-            if (['opened', 'labeled'].includes(action) && req.user.slackUrl && status.isSuccess) {
+            if (['opened', 'labeled'].includes(action) && req.user.slackUrl && status.isSuccess && !status.bypass) {
                 const slack = new Slack();
                 slack.setWebhook(req.user.slackUrl);
 
@@ -55,12 +51,8 @@ router.post('/reviews', passport.authenticate('localapikey'), (req, res, next) =
         const minimum = req.query.minimum && parseInt(req.query.minimum, 10);
         const baseBranch = req.query.branch;
 
-        if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
-            return res.send({ isSuccess: false });
-        }
-
         const github = new Github(req.user.accessToken);
-        return github.processReviews({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, minimum).then((status) => {
+        return github.processReviews({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, minimum, [pullRequest.base.ref, baseBranch]).then((status) => {
             res.send(status);
         }).catch(next);
     }
@@ -75,12 +67,8 @@ router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next
         const pullRequest = JSON.parse(req.body.payload).pull_request;
         const baseBranch = req.query.branch;
 
-        if (baseBranch && !minimatch(pullRequest.base.ref, baseBranch)) {
-            return res.send({ isSuccess: false });
-        }
-
         const github = new Github(req.user.accessToken);
-        return github.processCommitMsg({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number).then((status) => {
+        return github.processCommitMsg({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.number, [pullRequest.base.ref, baseBranch]).then((status) => {
             res.send(status);
         }).catch(next);
     }
