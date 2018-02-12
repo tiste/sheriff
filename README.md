@@ -8,6 +8,8 @@
 >
 > ... 2 hours later: "F*ck, you merged it anyway!"
 
+[![Build Status](https://travis-ci.org/tiste/sheriff.svg?branch=master)](https://travis-ci.org/tiste/sheriff)
+
 ## What is it?
 
 <img src="./public/images/checks.png" alt="What is it?">
@@ -99,6 +101,6 @@ Install dependencies: `npm i`
 
 ### Tests
 
-`npm run noreg`
+`npm test -- -watch`
 
-`npm run test -- -watch`
+`npm run noreg`
