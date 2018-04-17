@@ -26,7 +26,7 @@ When adding a "Mergeable" label to your pull request, it will pass the status ch
 
 ### /reviews
 
-When 2 or more approvals are given to your pull request, it will pass the status check to green, otherwise red.
+When 2 or more approvals are given to your pull request, it will pass the status check to green, otherwise red. It will also check on requested reviewers.
 
 > You can configure the minimum number of reviews with the query param `?minimum=1`
 

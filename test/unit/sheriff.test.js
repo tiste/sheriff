@@ -87,7 +87,7 @@ describe('-- Sheriff tests --', () => {
 
         it('Valid reviews (default minimum value) with given base branch', () => {
 
-            const result = sheriff.reviews(['APPROVED', 'APPROVED'], 2, ['release-1.0.0', 'release-*']);
+            const result = sheriff.reviews(['APPROVED', 'APPROVED'], 2, [], ['release-1.0.0', 'release-*']);
             result.should.be.eql({
                 isSuccess: true,
                 description: 'There is at least 2 or more approvals, it\'s okay',
@@ -115,6 +115,26 @@ describe('-- Sheriff tests --', () => {
             });
         });
 
+        it('Valid reviews with one required reviewer', () => {
+
+            const result = sheriff.reviews(['APPROVED', 'APPROVED'], 2, ['tiste']);
+            result.should.be.eql({
+                isSuccess: false,
+                description: 'tiste must review that pull request',
+                bypass: false,
+            });
+        });
+
+        it('Valid reviews with multiple required reviewer', () => {
+
+            const result = sheriff.reviews(['APPROVED', 'APPROVED'], 2, ['tiste', 'chuck']);
+            result.should.be.eql({
+                isSuccess: false,
+                description: 'tiste and chuck must review that pull request',
+                bypass: false,
+            });
+        });
+
         it('Refuse reviews with changes requested and enough reviews', () => {
 
             const result = sheriff.reviews(['APPROVED', 'APPROVED', 'CHANGES_REQUESTED']);
@@ -127,7 +147,7 @@ describe('-- Sheriff tests --', () => {
 
         it('Does nothing when the given base branch is not the same as the PR', () => {
 
-            const result = sheriff.reviews(['APPROVED', 'APPROVED'], 2, ['release', 'release-*']);
+            const result = sheriff.reviews(['APPROVED', 'APPROVED'], 2, [], ['release', 'release-*']);
             result.should.be.eql({
                 isSuccess: true,
                 description: 'There is at least 2 or more approvals, it\'s okay',
