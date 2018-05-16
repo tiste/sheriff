@@ -139,8 +139,7 @@ app.use(passport.session());
 // app
 
 app.get('/', (req, res) => {
-
-    res.renderVue('HomePage', { title: 'Sheriff', token: _.get(req.user, 'token', '') }, { head: { title: 'Sheriff' } });
+    res.renderVue('App', { title: 'Sheriff', token: _.get(req.user, 'token', ''), feature: {} }, { head: { title: 'Sheriff' } });
 });
 
 app.get('/me', userService.ensureAuthenticated, (req, res) => {
@@ -168,8 +167,9 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 });
 
 // run magic
+const SERVER_PORT = process.env.PORT || 3000;
+server.listen(SERVER_PORT);
 
-server.listen(process.env.PORT || 3000);
-
+console.log(`Server started at port: ${SERVER_PORT}`); // eslint-disable-line no-console
 
 module.exports = app;

@@ -4,7 +4,7 @@ import convict from 'convict';
 
 const conf = convict({
     NODE_ENV: {
-        doc: 'The applicaton environment.',
+        doc: 'The application environment.',
         format: ['development', 'test', 'production', null],
         default: 'development',
         env: 'NODE_ENV',
