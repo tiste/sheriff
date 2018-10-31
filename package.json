@@ -3,50 +3,50 @@
   "version": "0.0.1",
   "scripts": {
     "lint": "eslint .",
-    "noreg": "mocha test/e2e/**/*.test.js --reporter spec --timeout 120000 --require babel-register --require ./test/config.js",
     "start": "nodemon -e js,vue --exec babel-node -- app.js --inspect",
-    "test": "mocha test/unit/**/*.test.js --reporter dot --timeout 120000 --require babel-register --require ./test/config.js"
+    "test": "jest"
   },
   "bin": {
     "sheriff": "cli.js"
   },
   "dependencies": {
-    "@octokit/rest": "15.2.6",
+    "@octokit/rest": "15.15.1",
     "babel-cli": "6.26.0",
-    "babel-eslint": "8.2.1",
+    "babel-eslint": "10.0.1",
     "babel-plugin-transform-runtime": "6.23.0",
-    "babel-preset-env": "1.6.1",
-    "body-parser": "1.18.2",
-    "convict": "4.0.2",
-    "db-migrate": "0.10.5",
-    "db-migrate-pg": "0.3.0",
-    "express": "4.16.2",
+    "babel-preset-env": "1.7.0",
+    "body-parser": "1.18.3",
+    "convict": "4.4.0",
+    "db-migrate": "0.11.3",
+    "db-migrate-pg": "0.4.0",
+    "express": "4.16.4",
     "express-session": "1.15.6",
-    "express-vue": "4.0.14",
+    "express-vue": "5.7.1",
     "hat": "0.0.3",
-    "lodash": "4.17.5",
-    "meow": "4.0.0",
+    "lodash": "4.17.11",
+    "meow": "5.0.0",
     "minimatch": "3.0.4",
-    "morgan": "1.9.0",
-    "newrelic": "2.7.0",
+    "morgan": "1.9.1",
+    "newrelic": "4.9.0",
     "node-gitlab": "tiste/gitlab",
-    "nodemon": "1.14.12",
+    "nodemon": "1.18.5",
     "passport": "0.4.0",
     "passport-github": "1.1.0",
-    "passport-gitlab2": "3.0.0",
+    "passport-gitlab2": "4.0.0",
     "passport-localapikey": "0.0.3",
-    "pg": "7.4.1",
-    "pug": "2.0.0-rc.4",
+    "pg": "7.6.0",
+    "pug": "2.0.3",
     "slack-node": "0.1.8"
   },
   "devDependencies": {
-    "chai": "4.1.2",
-    "chai-as-promised": "7.1.1",
     "cheerio": "1.0.0-rc.2",
-    "eslint": "4.17.0",
+    "eslint": "5.8.0",
     "eslint-config-plazza": "1.1.0",
-    "mocha": "5.0.0",
-    "proxyquire": "1.8.0",
-    "supertest": "3.0.0"
+    "jest": "23.6.0",
+    "proxyquire": "2.1.0"
+  },
+  "jest": {
+    "coverageDirectory": "coverage",
+    "testEnvironment": "node"
   }
 }

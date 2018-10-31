@@ -2,7 +2,6 @@
 
 import express from 'express';
 import passport from 'passport';
-import minimatch from 'minimatch';
 import Slack from 'slack-node';
 import Github from '../lib/github';
 

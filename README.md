@@ -9,6 +9,7 @@
 > ... 2 hours later: "F*ck, you merged it anyway!"
 
 [![Build Status](https://travis-ci.org/tiste/sheriff.svg?branch=master)](https://travis-ci.org/tiste/sheriff)
+[![Coverage Status](https://coveralls.io/repos/github/tiste/sheriff/badge.svg?branch=master)](https://coveralls.io/github/tiste/sheriff?branch=master)
 
 ## What is it?
 
