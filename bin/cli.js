@@ -5,7 +5,7 @@
 require('babel-core/register');
 
 const meow = require('meow');
-const sheriff = require('./lib/sheriff');
+const sheriff = require('../lib/sheriff');
 
 const cli = meow(`
 	Usage

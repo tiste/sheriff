@@ -60,6 +60,8 @@ $ sheriff --help
     { isSuccesss: true, description: 'All commit messages are okay' }
 ```
 
+> `npm link` will allow you to use it in dev mode
+
 ## Install
 
 ### Easy way (SaaS)
