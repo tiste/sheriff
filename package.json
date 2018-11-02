@@ -10,7 +10,7 @@
     "sheriff": "bin/cli.js"
   },
   "dependencies": {
-    "@octokit/rest": "15.15.1",
+    "@octokit/rest": "15.2.6",
     "babel-cli": "6.26.0",
     "babel-eslint": "10.0.1",
     "babel-plugin-transform-runtime": "6.23.0",
