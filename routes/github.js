@@ -91,4 +91,20 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
     res.sendStatus(200);
 });
 
+router.post('/wip', passport.authenticate('localapikey'), (req, res, next) => {
+
+    if (['pull_request'].includes(req.get('x-github-event'))) {
+
+        const pullRequest = JSON.parse(req.body.payload).pull_request;
+        const pattern = req.query.pattern;
+
+        const github = new Github(req.user.accessToken);
+        return github.processWip({ owner: pullRequest.base.user.login, repo: pullRequest.base.repo.name, sha: pullRequest.head.sha }, pullRequest.title, pattern).then((status) => {
+            res.send(status);
+        }).catch(next);
+    }
+
+    res.sendStatus(200);
+});
+
 export default router;

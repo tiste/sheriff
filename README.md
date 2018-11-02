@@ -19,7 +19,7 @@
 
 ### /label
 
-When adding a "Mergeable" label to your pull request, it will pass the status check to green, otherwise red.
+When adding a "Mergeable" label to your pull request, sheriff will approve.
 
 > You can configure the label name with the query param `?name=AnotherLabel`
 
@@ -27,7 +27,7 @@ When adding a "Mergeable" label to your pull request, it will pass the status ch
 
 ### /reviews
 
-When 2 or more approvals are given to your pull request, it will pass the status check to green, otherwise red. It will also check on requested reviewers.
+When 2 or more approvals are given to your pull request, sheriff will approve. It will also check on requested reviewers.
 
 > You can configure the minimum number of reviews with the query param `?minimum=1`
 
@@ -35,17 +35,26 @@ When 2 or more approvals are given to your pull request, it will pass the status
 
 ### /commit-msg
 
-When all commit messages of your pull request are respecting the conventionalcommits.org, it will pass the status check to green, otherwise red.
+When all commit messages of your pull request are respecting the conventionalcommits.org, sheriff will approve.
 
 > Github events: "Pull Request"
 
 ### /branch
 
-When your pull request branch name match with the given pattern, it will pass the status check to green, otherwise red.
+When your pull request branch name match with the given pattern, sheriff will approve.
 
 > You can configure the branch name pattern with the query param `?pattern=*` as a [glob](https://github.com/isaacs/minimatch) syntax
 
 > Github events: "Pull Request"
+
+
+### /wip
+
+When you pull request name is not in WIP mode (e.g. WIP: super duper PR), sheriff will approve.
+
+> You can configure the pattern with the query param `?pattern=WIP: *` as a [glob](https://github.com/isaacs/minimatch) syntax
+
+> Github events: "Pull request"
 
 ## CLI
 
