@@ -6,6 +6,10 @@ import * as sheriff from '../../lib/sheriff';
 
 export default class GitlabService {
 
+    constructor(gitlabInstance) {
+        this.gitlab = gitlabInstance;
+    }
+
     login(accessToken) {
 
         this.gitlab = new ProjectsBundle({
@@ -55,10 +59,6 @@ export default class GitlabService {
 
         const { isSuccess, description, bypass } = sheriff.branch(branch, pattern);
         const state = isSuccess ? 'success' : 'failed';
-
-        if (bypass) {
-            return Promise.resolve({ isSuccess, description, bypass });
-        }
 
         return this.gitlab.Commits.editStatus(projectId, mergeRequest.sha, { state, context: 'sheriff/branch', description })
             .then(() => {
