@@ -6,7 +6,7 @@ import querystring from 'querystring';
 import conf from '../config/config';
 import * as userService from '../lib/userService';
 import FEATURES from '../lib/features';
-import Github from '../lib/github';
+import GithubService from '../lib/githubService';
 import Gitlab from '../lib/gitlab';
 
 const router = express.Router();
@@ -22,7 +22,7 @@ router.post('/setup', userService.ensureAuthenticated, (req, res, next) => {
     const url = `${conf.get('APP_URL')}/${req.user.provider}/${feature.name}?${querystring.stringify(options)}`;
 
     if (req.user.provider === 'github') {
-        const github = new Github(req.user.accessToken);
+        const github = new GithubService(req.user.accessToken);
         const [owner, repo] = req.body.repo.split('/');
 
         github.createHook({ owner, repo }, feature.github_events, url).then(() => {
