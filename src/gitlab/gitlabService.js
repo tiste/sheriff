@@ -18,6 +18,13 @@ export default class GitlabService {
         return this;
     }
 
+    async search(query) {
+
+        return this.gitlab.Projects.Search(query).then((repos) => {
+            return _.map(repos, 'path_with_namespace');
+        });
+    }
+
     async processLabel(projectId, mergeRequestId, label, baseBranch) {
 
         const mergeRequest = await this.gitlab.MergeRequests.show(projectId, mergeRequestId);

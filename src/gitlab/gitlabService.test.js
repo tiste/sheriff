@@ -6,6 +6,22 @@ import { ProjectsBundle } from 'gitlab';
 jest.mock('gitlab');
 const gitlabMock = new ProjectsBundle();
 
+describe('search', () => {
+    it('should search and get array of names', async () => {
+        gitlabMock.Projects = {
+            Search: jest.fn().mockResolvedValue([
+                { path_with_namespace: 'tiste/sheriff' },
+                { path_with_namespace: 'tiste/dotfiles' },
+            ]),
+        };
+        const gitlabService = new GitlabService(gitlabMock);
+
+        const names = await gitlabService.search('tiste');
+
+        expect(names).toEqual(['tiste/sheriff', 'tiste/dotfiles']);
+    });
+});
+
 describe('processLabel', () => {
     it('should process label without bypassing', async () => {
         gitlabMock.MergeRequests = {
