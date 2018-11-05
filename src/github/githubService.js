@@ -21,6 +21,13 @@ export default class GithubService {
         return this;
     }
 
+    async search(query) {
+
+        return this.octokit.search.repos({ q: query }).then((repos) => {
+            return _.map(repos.items, 'full_name');
+        });
+    }
+
     async processLabel({ owner, repo, sha }, number, label, compareBranches) {
 
         const { data: issue } = await this.octokit.issues.get({ owner, repo, number });

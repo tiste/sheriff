@@ -19,7 +19,7 @@ const FEATURES = {
             branch: '',
         },
         github_events: ['pull_request', 'pull_request_review'],
-        img: 'review.png',
+        img: 'reviews.png',
     },
     'commit-msg': {
         name: 'commit-msg',

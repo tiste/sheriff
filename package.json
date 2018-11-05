@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "lint": "eslint .",
-    "start": "nodemon -e js,vue --exec babel-node -- app.js --inspect",
+    "start": "nodemon --exec babel-node -- app.js --inspect",
     "test": "jest --coverage"
   },
   "bin": {
@@ -19,9 +19,9 @@
     "convict": "4.4.0",
     "db-migrate": "0.11.3",
     "db-migrate-pg": "0.4.0",
+    "ejs": "2.6.1",
     "express": "4.16.4",
     "express-session": "1.15.6",
-    "express-vue": "4.0.14",
     "gitlab": "4.2.1",
     "hat": "0.0.3",
     "lodash": "4.17.11",
@@ -35,7 +35,6 @@
     "passport-gitlab2": "4.0.0",
     "passport-localapikey": "0.0.3",
     "pg": "7.6.0",
-    "pug": "2.0.3",
     "slack-node": "0.1.8"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-import { ProjectsBundle } from 'gitlab';
+import gitlab from 'gitlab';
 import * as sheriff from '../../lib/sheriff';
 
 export default class GitlabService {
@@ -12,10 +12,17 @@ export default class GitlabService {
 
     login(accessToken) {
 
-        this.gitlab = new ProjectsBundle({
+        this.gitlab = new gitlab.ProjectsBundle({
             oauthToken: accessToken,
         });
         return this;
+    }
+
+    async search(query) {
+
+        return this.gitlab.Projects.Search(query).then((repos) => {
+            return _.map(repos, 'path_with_namespace');
+        });
     }
 
     async processLabel(projectId, mergeRequestId, label, baseBranch) {
