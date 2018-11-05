@@ -15,11 +15,11 @@ import { Strategy as GithubStrategy } from 'passport-github';
 import { Strategy as GitlabStrategy } from 'passport-gitlab2';
 import expressVue from 'express-vue';
 import { query } from './lib/pg';
-import * as userService from './lib/userService';
+import * as userService from './src/users/userService';
 
-import featuresRouter from './routes/features';
-import githubRouter from './routes/github';
-import gitlabRouter from './routes/gitlab';
+import featuresRouter from './src/features/featuresRouter';
+import githubRouter from './src/github/githubRouter';
+import gitlabRouter from './src/gitlab/gitlabRouter';
 
 const app = express();
 const server = require('http').Server(app);

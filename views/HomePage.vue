@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import FEATURES from '../lib/features';
+    import FEATURES from '../src/features/features';
     import ChuckLogo from './ChuckLogo.vue'
 
     export default {

@@ -1,7 +1,7 @@
 'use strict';
 
 import hat from 'hat';
-import { query } from './pg';
+import { query } from '../../lib/pg';
 
 export function save(userId, provider, accessToken) {
     const token = hat();

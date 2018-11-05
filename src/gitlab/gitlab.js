@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import GitlabApi from 'node-gitlab';
-import * as sheriff from './sheriff';
+import * as sheriff from '../../lib/sheriff';
 
 export default class Gitlab {
 

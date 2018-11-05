@@ -2,23 +2,28 @@
 
 import _ from 'lodash';
 import octokit from '@octokit/rest';
-import * as sheriff from './sheriff';
+import * as sheriff from '../../lib/sheriff';
 
-const github = new octokit();
 
-export default class Github {
+export default class GithubService {
 
-    constructor(accessToken) {
+    constructor(github = new octokit()) {
 
-        github.authenticate({
+        this.octokit = github;
+    }
+
+    login(accessToken) {
+
+        this.octokit.authenticate({
             type: 'oauth',
             token: accessToken,
         });
+        return this;
     }
 
     async processLabel({ owner, repo, sha }, number, label, compareBranches) {
 
-        const { data: issue } = await github.issues.get({ owner, repo, number });
+        const { data: issue } = await this.octokit.issues.get({ owner, repo, number });
 
         const { isSuccess, description, bypass } = sheriff.label(_.map(issue.labels, 'name'), label, compareBranches);
         const state = isSuccess ? 'success' : 'failure';
@@ -27,7 +32,7 @@ export default class Github {
             return Promise.resolve({ isSuccess, description, bypass });
         }
 
-        return github.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/label', description })
+        return this.octokit.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/label', description })
             .then(() => {
                 return { isSuccess, description, bypass };
             });
@@ -35,8 +40,8 @@ export default class Github {
 
     async processReviews({ owner, repo, sha }, number, minimum, compareBranches) {
 
-        const { data: reviews } = await github.pullRequests.getReviews({ owner, repo, number, per_page: 1000 });
-        const { data: requestedReviewers } = await github.pullRequests.getReviewRequests({ owner, repo, number });
+        const { data: reviews } = await this.octokit.pullRequests.getReviews({ owner, repo, number, per_page: 1000 });
+        const { data: requestedReviewers } = await this.octokit.pullRequests.getReviewRequests({ owner, repo, number });
 
         const reviewers = _(reviews)
             .chain()
@@ -65,7 +70,7 @@ export default class Github {
             return Promise.resolve({ isSuccess, description, bypass });
         }
 
-        return github.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/reviews', description })
+        return this.octokit.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/reviews', description })
             .then(() => {
                 return { isSuccess, description, bypass };
             });
@@ -73,7 +78,7 @@ export default class Github {
 
     async processCommitMsg({ owner, repo, sha }, number, compareBranches) {
 
-        const { data: commits } = await github.pullRequests.getCommits({ owner, repo, number });
+        const { data: commits } = await this.octokit.pullRequests.getCommits({ owner, repo, number });
 
         const { isSuccess, description, bypass } = sheriff.commitMsg(_.map(commits, 'commit.message'), compareBranches);
         const state = isSuccess ? 'success' : 'failure';
@@ -82,7 +87,7 @@ export default class Github {
             return Promise.resolve({ isSuccess, description, bypass });
         }
 
-        return github.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/commit-msg', description })
+        return this.octokit.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/commit-msg', description })
             .then(() => {
                 return { isSuccess, description, bypass };
             });
@@ -97,7 +102,7 @@ export default class Github {
             return Promise.resolve({ isSuccess, description, bypass });
         }
 
-        return github.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/branch', description })
+        return this.octokit.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/branch', description })
             .then(() => {
                 return { isSuccess, description, bypass };
             });
@@ -112,7 +117,7 @@ export default class Github {
             return Promise.resolve({ isSuccess, description, bypass });
         }
 
-        return github.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/wip', description })
+        return this.octokit.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/wip', description })
             .then(() => {
                 return { isSuccess, description, bypass };
             });
@@ -120,6 +125,6 @@ export default class Github {
 
     createHook({ owner, repo }, events, url) {
 
-        return github.repos.createHook({ owner, repo, name: 'web', events, active: true, config: { url } });
+        return this.octokit.repos.createHook({ owner, repo, name: 'web', events, active: true, config: { url } });
     }
 }
