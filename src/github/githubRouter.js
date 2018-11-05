@@ -14,6 +14,12 @@ router.get('/callback', passport.authenticate('github', { failureRedirect: '/' }
     res.redirect('/?token=' + req.user.token);
 });
 
+router.get('/search', passport.authenticate('localapikey'), (req, res, next) => {
+
+    const githubService = new GithubService().login(req.user.accessToken);
+    return githubService.search(req.param('q')).catch(next);
+});
+
 router.post('/label', passport.authenticate('localapikey'), (req, res, next) => {
 
     if (['pull_request'].includes(req.get('x-github-event'))) {

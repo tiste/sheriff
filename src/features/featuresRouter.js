@@ -12,7 +12,7 @@ import GitlabService from '../gitlab/gitlabService';
 const router = express.Router();
 
 router.get(`/:feature(${_.keys(FEATURES).join('|')})`, userService.ensureAuthenticated, (req, res) => {
-    res.renderVue('App', { title: 'Sheriff', token: _.get(req.user, 'token', ''), feature: FEATURES[req.params.feature] }, { head: { title: 'Sheriff' } });
+    res.renderVue('App', { title: 'Sheriff', token: _.get(req.user, 'token', ''), feature: FEATURES[req.param('feature')] }, { head: { title: 'Sheriff' } });
 });
 
 router.post('/setup', userService.ensureAuthenticated, (req, res, next) => {

@@ -6,6 +6,21 @@ import octokit from '@octokit/rest';
 jest.mock('@octokit/rest');
 const octokitMock = new octokit();
 
+describe('search', () => {
+    it('should search and get array of names', async () => {
+        octokitMock.search = {
+            repos: jest.fn().mockResolvedValue({
+                items: [{ full_name: 'tiste/sheriff' }, { full_name: 'tiste/dotfiles' }],
+            }),
+        };
+        const githubService = new GithubService(octokitMock);
+
+        const names = await githubService.search('tiste');
+
+        expect(names).toEqual(['tiste/sheriff', 'tiste/dotfiles']);
+    });
+});
+
 describe('processLabel', () => {
     it('should process label without bypassing', async () => {
         octokitMock.issues = {
