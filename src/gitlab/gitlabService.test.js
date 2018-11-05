@@ -2,9 +2,23 @@
 
 import GitlabService from './gitlabService';
 import { ProjectsBundle } from 'gitlab';
+import gitlab from 'gitlab';
 
 jest.mock('gitlab');
 const gitlabMock = new ProjectsBundle();
+
+describe('login', () => {
+    it('should login', async () => {
+        gitlab.ProjectsBundle = jest.fn();
+        const githubService = new GitlabService();
+
+        githubService.login('access_token');
+
+        expect(gitlab.ProjectsBundle).toHaveBeenCalledWith({
+            oauthToken: 'access_token',
+        });
+    });
+});
 
 describe('search', () => {
     it('should search and get array of names', async () => {
@@ -189,5 +203,18 @@ describe('processBranch', () => {
             description: 'The branch name doesn\'t match the pattern',
             isSuccess: false,
         });
+    });
+});
+
+describe('createHook', () => {
+    it('post hook', async () => {
+        gitlabMock.ProjectHooks = {
+            add: jest.fn(),
+        };
+        const gitlabService = new GitlabService(gitlabMock);
+
+        gitlabService.createHook('tiste/sheriff', 'http://');
+
+        expect(gitlabMock.ProjectHooks.add).toHaveBeenCalledWith('tiste/sheriff', 'http://', { merge_requests_events: true, push_events: false });
     });
 });

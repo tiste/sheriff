@@ -1,7 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-import { ProjectsBundle } from 'gitlab';
+import gitlab from 'gitlab';
 import * as sheriff from '../../lib/sheriff';
 
 export default class GitlabService {
@@ -12,7 +12,7 @@ export default class GitlabService {
 
     login(accessToken) {
 
-        this.gitlab = new ProjectsBundle({
+        this.gitlab = new gitlab.ProjectsBundle({
             oauthToken: accessToken,
         });
         return this;

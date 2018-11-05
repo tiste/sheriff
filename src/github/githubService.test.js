@@ -6,6 +6,20 @@ import octokit from '@octokit/rest';
 jest.mock('@octokit/rest');
 const octokitMock = new octokit();
 
+describe('login', () => {
+    it('should login', async () => {
+        octokitMock.authenticate = jest.fn();
+        const githubService = new GithubService(octokitMock);
+
+        githubService.login('access_token');
+
+        expect(octokitMock.authenticate).toHaveBeenCalledWith({
+            type: 'oauth',
+            token: 'access_token',
+        });
+    });
+});
+
 describe('search', () => {
     it('should search and get array of names', async () => {
         octokitMock.search = {
@@ -382,6 +396,26 @@ describe('processWip', () => {
             bypass: false,
             description: 'That pull request is ready to go',
             isSuccess: true,
+        });
+    });
+});
+
+describe('createHook', () => {
+    it('post hook', async () => {
+        octokitMock.repos = {
+            createHook: jest.fn(),
+        };
+        const githubService = new GithubService(octokitMock);
+
+        githubService.createHook({ owner: 'tiste', repo: 'sheriff' }, ['pull_request'], 'http://');
+
+        expect(octokitMock.repos.createHook).toHaveBeenCalledWith({
+            owner: 'tiste',
+            repo: 'sheriff',
+            name: 'web',
+            events: ['pull_request'],
+            active: true,
+            config: { url: 'http://' },
         });
     });
 });
