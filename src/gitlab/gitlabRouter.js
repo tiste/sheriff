@@ -3,6 +3,7 @@
 import express from 'express';
 import passport from 'passport';
 import GitlabService from './gitlabService';
+import * as userService from '../users/userService';
 
 const router = express.Router();
 
@@ -11,6 +12,12 @@ router.get('/login', passport.authenticate('gitlab'));
 router.get('/callback', passport.authenticate('gitlab', { failureRedirect: '/' }), (req, res) => {
 
     res.redirect('/?token=' + req.user.token);
+});
+
+router.get('/search', userService.ensureAuthenticated, (req, res, next) => {
+
+    const gitlabService = new GitlabService().login(req.user.accessToken);
+    return gitlabService.search(req.params.q).catch(next);
 });
 
 router.post('/label', passport.authenticate('localapikey'), (req, res, next) => {

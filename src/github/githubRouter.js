@@ -4,6 +4,7 @@ import express from 'express';
 import passport from 'passport';
 import Slack from 'slack-node';
 import GithubService from './githubService';
+import * as userService from '../users/userService';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.get('/callback', passport.authenticate('github', { failureRedirect: '/' }
     res.redirect('/?token=' + req.user.token);
 });
 
-router.get('/search', passport.authenticate('localapikey'), (req, res, next) => {
+router.get('/search', userService.ensureAuthenticated, (req, res, next) => {
 
     const githubService = new GithubService().login(req.user.accessToken);
     return githubService.search(req.params.q).catch(next);
