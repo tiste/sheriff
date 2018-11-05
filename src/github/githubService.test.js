@@ -238,9 +238,8 @@ describe('processCommitMsg', () => {
 
 describe('processBranch', () => {
     it('should process commit messages', async () => {
-        const githubService = new GithubService({
-            repos: { createStatus: jest.fn().mockResolvedValue() },
-        });
+        octokitMock.repos = { createStatus: jest.fn().mockResolvedValue() };
+        const githubService = new GithubService(octokitMock);
 
         const status = await githubService.processBranch({
             owner: 'tiste',
@@ -257,9 +256,8 @@ describe('processBranch', () => {
     });
 
     it('should process commit messages with failure', async () => {
-        const githubService = new GithubService({
-            repos: { createStatus: jest.fn().mockResolvedValue() },
-        });
+        octokitMock.repos = { createStatus: jest.fn().mockResolvedValue() };
+        const githubService = new GithubService(octokitMock);
 
         const status = await githubService.processBranch({
             owner: 'tiste',
@@ -278,9 +276,8 @@ describe('processBranch', () => {
 
 describe('processWip', () => {
     it('should process commit messages', async () => {
-        const githubService = new GithubService({
-            repos: { createStatus: jest.fn().mockResolvedValue() },
-        });
+        octokitMock.repos = { createStatus: jest.fn().mockResolvedValue() };
+        const githubService = new GithubService(octokitMock);
 
         const status = await githubService.processWip({
             owner: 'tiste',
@@ -297,9 +294,8 @@ describe('processWip', () => {
     });
 
     it('should process commit messages with failure', async () => {
-        const githubService = new GithubService({
-            repos: { createStatus: jest.fn().mockResolvedValue() },
-        });
+        octokitMock.repos = { createStatus: jest.fn().mockResolvedValue() };
+        const githubService = new GithubService(octokitMock);
 
         const status = await githubService.processWip({
             owner: 'tiste',

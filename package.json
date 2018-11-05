@@ -48,6 +48,7 @@
   },
   "jest": {
     "coverageDirectory": "coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "resetMocks": true
   }
 }
