@@ -2,7 +2,7 @@
 
 import express from 'express';
 import passport from 'passport';
-import Gitlab from './gitlab';
+import GitlabService from './gitlabService';
 
 const router = express.Router();
 
@@ -21,8 +21,8 @@ router.post('/label', passport.authenticate('localapikey'), (req, res, next) => 
         const label = req.query.name;
         const baseBranch = req.query.branch;
 
-        const gitlab = new Gitlab(req.user.accessToken);
-        return gitlab.processLabel(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, label, baseBranch).then((status) => {
+        const gitlabService = new GitlabService().login(req.user.accessToken);
+        return gitlabService.processLabel(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.iid, label, baseBranch).then((status) => {
             res.send(status);
         }).catch(next);
     }
@@ -37,8 +37,8 @@ router.post('/commit-msg', passport.authenticate('localapikey'), (req, res, next
         const pullRequest = req.body;
         const baseBranch = req.query.branch;
 
-        const gitlab = new Gitlab(req.user.accessToken);
-        return gitlab.processCommitMsg(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, baseBranch).then((status) => {
+        const gitlabService = new GitlabService().login(req.user.accessToken);
+        return gitlabService.processCommitMsg(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.iid, baseBranch).then((status) => {
             res.send(status);
         }).catch(next);
     }
@@ -53,8 +53,8 @@ router.post('/branch', passport.authenticate('localapikey'), (req, res, next) =>
         const pullRequest = req.body;
         const pattern = req.query.pattern;
 
-        const gitlab = new Gitlab(req.user.accessToken);
-        return gitlab.processBranch(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.id, pullRequest.object_attributes.source_branch, pattern).then((status) => {
+        const gitlabService = new GitlabService().login(req.user.accessToken);
+        return gitlabService.processBranch(pullRequest.object_attributes.source_project_id, pullRequest.object_attributes.iid, pullRequest.object_attributes.source_branch, pattern).then((status) => {
             res.send(status);
         }).catch(next);
     }
