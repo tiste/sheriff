@@ -68,7 +68,7 @@
     <script>
         $("#autocomplete").easyAutocomplete({
             url: (query) => {
-                return `/${autocompleteUrl}/search?q${query}`;
+                return `/<%= provider %>/search?q=${query}`;
             },
         });
     </script>
