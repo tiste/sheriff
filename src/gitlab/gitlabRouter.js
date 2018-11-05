@@ -17,7 +17,9 @@ router.get('/callback', passport.authenticate('gitlab', { failureRedirect: '/' }
 router.get('/search', userService.ensureAuthenticated, (req, res, next) => {
 
     const gitlabService = new GitlabService().login(req.user.accessToken);
-    return gitlabService.search(req.params.q).catch(next);
+    return gitlabService.search(req.query.q).then((names) => {
+        res.send(names);
+    }).catch(next);
 });
 
 router.post('/label', passport.authenticate('localapikey'), (req, res, next) => {

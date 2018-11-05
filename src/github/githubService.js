@@ -24,7 +24,7 @@ export default class GithubService {
     async search(query) {
 
         return this.octokit.search.repos({ q: query }).then((repos) => {
-            return _.map(repos.items, 'full_name');
+            return _.map(repos.data.items, 'full_name');
         });
     }
 

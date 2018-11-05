@@ -24,7 +24,9 @@ describe('search', () => {
     it('should search and get array of names', async () => {
         octokitMock.search = {
             repos: jest.fn().mockResolvedValue({
-                items: [{ full_name: 'tiste/sheriff' }, { full_name: 'tiste/dotfiles' }],
+                data: {
+                    items: [{ full_name: 'tiste/sheriff' }, { full_name: 'tiste/dotfiles' }],
+                },
             }),
         };
         const githubService = new GithubService(octokitMock);

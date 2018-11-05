@@ -1,29 +1,15 @@
 'use strict';
 
 import GitlabService from './gitlabService';
-import { ProjectsBundle } from 'gitlab';
-import gitlab from 'gitlab';
+import GitlabApi from 'gitlab';
 
 jest.mock('gitlab');
-const gitlabMock = new ProjectsBundle();
-
-describe('login', () => {
-    it('should login', async () => {
-        gitlab.ProjectsBundle = jest.fn();
-        const githubService = new GitlabService();
-
-        githubService.login('access_token');
-
-        expect(gitlab.ProjectsBundle).toHaveBeenCalledWith({
-            oauthToken: 'access_token',
-        });
-    });
-});
+const gitlabMock = new GitlabApi();
 
 describe('search', () => {
     it('should search and get array of names', async () => {
-        gitlabMock.Projects = {
-            Search: jest.fn().mockResolvedValue([
+        gitlabMock.Search = {
+            all: jest.fn().mockResolvedValue([
                 { path_with_namespace: 'tiste/sheriff' },
                 { path_with_namespace: 'tiste/dotfiles' },
             ]),

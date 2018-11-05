@@ -13,7 +13,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.min.css"/>
 
-    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.20/js/uikit.min.js"></script>
@@ -47,7 +47,11 @@
 
                                 <% Object.keys(feature.options).forEach(function (key) { %>
                                     <div class="uk-margin">
-                                        <label class="uk-form-label" for="sheriff-<%= key %>"><%= key %></label>
+                                        <label class="uk-form-label" for="sheriff-<%= key %>">
+                                            <%= key.charAt(0).toUpperCase() + key.slice(1) %><br>
+                                            <small><%= feature.options[key].description %><br>Default
+                                                value: <%= feature.options[key].default %></small>
+                                        </label>
                                         <div class="uk-form-controls">
                                             <input name="options[<%= key %>]" class="uk-input" id="sheriff-<%= key %>"
                                                    type="text">
@@ -68,9 +72,10 @@
     </div>
     <script>
         $("#autocomplete").easyAutocomplete({
-            url: (query) => {
+            url: function (query) {
                 return `/<%= provider %>/search?q=${query}`;
             },
+            requestDelay: 400,
         });
     </script>
 </div>
