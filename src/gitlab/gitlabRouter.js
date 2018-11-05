@@ -2,7 +2,7 @@
 
 import express from 'express';
 import passport from 'passport';
-import Gitlab from '../lib/gitlab';
+import Gitlab from './gitlab';
 
 const router = express.Router();
 

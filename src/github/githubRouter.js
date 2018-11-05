@@ -3,7 +3,7 @@
 import express from 'express';
 import passport from 'passport';
 import Slack from 'slack-node';
-import GithubService from '../lib/githubService';
+import GithubService from './githubService';
 
 const router = express.Router();
 

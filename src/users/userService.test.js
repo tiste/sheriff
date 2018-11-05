@@ -1,6 +1,6 @@
 'use strict';
 
-import * as pg from './pg';
+import * as pg from '../../lib/pg';
 import * as userService from './userService';
 
 jest.mock('hat', () => () => 42);

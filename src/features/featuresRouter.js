@@ -3,11 +3,11 @@
 import _ from 'lodash';
 import express from 'express';
 import querystring from 'querystring';
-import conf from '../config/config';
-import * as userService from '../lib/userService';
-import FEATURES from '../lib/features';
-import GithubService from '../lib/githubService';
-import Gitlab from '../lib/gitlab';
+import conf from '../../config/config';
+import * as userService from '../users/userService';
+import FEATURES from './features';
+import GithubService from '../github/githubService';
+import Gitlab from '../gitlab/gitlab';
 
 const router = express.Router();
 

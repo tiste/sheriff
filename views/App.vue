@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import FEATURES from '../lib/features';
+    import FEATURES from '../src/features/features';
     import ChuckLogo from './ChuckLogo.vue'
     import HomePage from './HomePage.vue'
     import FeaturesPage from './FeaturesPage.vue';
