@@ -17,7 +17,7 @@ router.get('/callback', passport.authenticate('github', { failureRedirect: '/' }
 router.get('/search', passport.authenticate('localapikey'), (req, res, next) => {
 
     const githubService = new GithubService().login(req.user.accessToken);
-    return githubService.search(req.param('q')).catch(next);
+    return githubService.search(req.params.q).catch(next);
 });
 
 router.post('/label', passport.authenticate('localapikey'), (req, res, next) => {

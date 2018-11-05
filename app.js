@@ -13,9 +13,9 @@ import passport from 'passport';
 import { Strategy as LocalAPIKeyStrategy } from 'passport-localapikey';
 import { Strategy as GithubStrategy } from 'passport-github';
 import { Strategy as GitlabStrategy } from 'passport-gitlab2';
-import expressVue from 'express-vue';
 import { query } from './lib/pg';
 import * as userService from './src/users/userService';
+import FEATURES from './src/features/features';
 
 import featuresRouter from './src/features/featuresRouter';
 import githubRouter from './src/github/githubRouter';
@@ -91,32 +91,8 @@ passport.use(new GitlabStrategy({
 
 // configure express middleware
 
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 app.set('trust proxy', true);
-app.use(expressVue.init({
-    rootPath: path.join(__dirname, 'views'),
-    vue: {
-        head: {
-            meta: [
-                {
-                    script: 'https://unpkg.com/vue/dist/vue.js',
-                },
-                {
-                    script: 'https://unpkg.com/vuetify/dist/vuetify.js',
-                },
-                {
-                    script: 'https://unpkg.com/axios/dist/axios.min.js',
-                },
-                {
-                    style: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons',
-                },
-                {
-                    style: 'https://unpkg.com/vuetify/dist/vuetify.min.css',
-                },
-            ],
-        },
-    },
-}));
 
 app.use(logger('combined'));
 app.use(bodyParser.json());
@@ -139,7 +115,14 @@ app.use(passport.session());
 // app
 
 app.get('/', (req, res) => {
-    res.renderVue('App', { title: 'Sheriff', token: _.get(req.user, 'token', ''), feature: {} }, { head: { title: 'Sheriff' } });
+    const token = _.get(req.user, 'token', '');
+
+    if (token) {
+        res.render('home', { title: 'Sheriff', token: _.get(req.user, 'token', ''), features: FEATURES });
+    }
+    else {
+        res.render('index', { title: 'Sheriff', token: _.get(req.user, 'token', '') });
+    }
 });
 
 app.get('/me', userService.ensureAuthenticated, (req, res) => {
