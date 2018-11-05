@@ -7,9 +7,9 @@ import * as sheriff from '../../lib/sheriff';
 
 export default class GithubService {
 
-    constructor(github = new octokit()) {
+    constructor(octokitInstance = new octokit()) {
 
-        this.octokit = github;
+        this.octokit = octokitInstance;
     }
 
     login(accessToken) {
@@ -98,10 +98,6 @@ export default class GithubService {
         const { isSuccess, description, bypass } = sheriff.branch(branch, pattern);
         const state = isSuccess ? 'success' : 'failure';
 
-        if (bypass) {
-            return Promise.resolve({ isSuccess, description, bypass });
-        }
-
         return this.octokit.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/branch', description })
             .then(() => {
                 return { isSuccess, description, bypass };
@@ -112,10 +108,6 @@ export default class GithubService {
 
         const { isSuccess, description, bypass } = sheriff.wip(title, pattern);
         const state = isSuccess ? 'success' : 'failure';
-
-        if (bypass) {
-            return Promise.resolve({ isSuccess, description, bypass });
-        }
 
         return this.octokit.repos.createStatus({ owner, repo, sha, state, context: 'sheriff/wip', description })
             .then(() => {
