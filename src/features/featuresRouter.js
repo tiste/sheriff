@@ -22,7 +22,7 @@ router.post('/setup', userService.ensureAuthenticated, (req, res, next) => {
     const url = `${conf.get('APP_URL')}/${req.user.provider}/${feature.name}?${querystring.stringify(options)}`;
 
     if (req.user.provider === 'github') {
-        const github = new GithubService(req.user.accessToken);
+        const github = new GithubService().login(req.user.accessToken);
         const [owner, repo] = req.body.repo.split('/');
 
         github.createHook({ owner, repo }, feature.github_events, url).then(() => {
