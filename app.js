@@ -115,14 +115,11 @@ app.use(passport.session());
 // app
 
 app.get('/', (req, res) => {
-    const token = _.get(req.user, 'token', '');
+    res.render('index', { title: 'Sheriff', features: FEATURES });
+});
 
-    if (token) {
-        res.render('home', { title: 'Sheriff', token: _.get(req.user, 'token', ''), features: FEATURES });
-    }
-    else {
-        res.render('index', { title: 'Sheriff', token: _.get(req.user, 'token', '') });
-    }
+app.get('/login', (req, res) => {
+    res.render('login', { title: 'Login - Sheriff' });
 });
 
 app.get('/me', userService.ensureAuthenticated, (req, res) => {

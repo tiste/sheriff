@@ -94,6 +94,6 @@ describe('ensureAuthenticated', () => {
 
         userService.ensureAuthenticated(req, res, {});
 
-        expect(res.redirect).toHaveBeenCalledWith('/');
+        expect(res.redirect).toHaveBeenCalledWith('/login');
     });
 });
