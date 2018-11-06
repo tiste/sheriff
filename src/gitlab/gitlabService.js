@@ -6,13 +6,13 @@ import * as sheriff from '../../lib/sheriff';
 
 export default class GitlabService {
 
-    constructor(gitlabInstance) {
+    constructor(gitlabInstance = new Gitlab()) {
         this.gitlab = gitlabInstance;
     }
 
     login(accessToken) {
 
-        this.gitlab = new Gitlab({
+        this.gitlab = new this.gitlab.ProjectsBundle({
             oauthToken: accessToken,
         });
         return this;

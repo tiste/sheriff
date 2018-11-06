@@ -53,7 +53,7 @@ describe('processLabel', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, 'mergeable', ['master', 'master']);
+        }, 42, 'mergeable', ['master', 'master']);
 
         expect(octokitMock.repos.createStatus).toHaveBeenCalled();
         expect(status).toEqual({
@@ -78,7 +78,7 @@ describe('processLabel', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, 'mergeable', ['master', 'develop']);
+        }, 42, 'mergeable', ['master', 'develop']);
 
         expect(octokitMock.repos.createStatus).not.toHaveBeenCalled();
         expect(status).toEqual({
@@ -103,7 +103,7 @@ describe('processLabel', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, 'mergeable', ['master', 'master']);
+        }, 42, 'mergeable', ['master', 'master']);
 
         expect(octokitMock.repos.createStatus).toHaveBeenCalled();
         expect(status).toEqual({
@@ -138,7 +138,7 @@ describe('processReviews', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, 1, ['master', 'master']);
+        }, 42, 1, ['master', 'master']);
 
         expect(octokitMock.repos.createStatus).toHaveBeenCalled();
         expect(status).toEqual({
@@ -171,7 +171,7 @@ describe('processReviews', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, 1, ['master', 'develop']);
+        }, 42, 1, ['master', 'develop']);
 
         expect(octokitMock.repos.createStatus).not.toHaveBeenCalled();
         expect(status).toEqual({
@@ -203,13 +203,45 @@ describe('processReviews', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, 1, ['master', 'master']);
+        }, 42, 1, ['master', 'master']);
 
         expect(octokitMock.repos.createStatus).toHaveBeenCalled();
         expect(status).toEqual({
             bypass: false,
             description: 'There is at least 1 or more approvals, but 1 changes requested',
             isSuccess: false,
+        });
+    });
+
+    it('should process label with dismiss', async () => {
+        octokitMock.pullRequests = {
+            getReviews: jest.fn().mockResolvedValue({
+                data: [
+                    { id: 1, state: 'CHANGES_REQUESTED', user: { id: 'tiste' } },
+                    { id: 2, state: 'DISMISSED', user: { id: 'tiste' } },
+                    { id: 3, state: 'APPROVED', user: { id: 'yes-tiste' } },
+                ],
+            }),
+            getReviewRequests: jest.fn().mockResolvedValue({
+                data: {
+                    users: [],
+                },
+            }),
+        };
+        octokitMock.repos = { createStatus: jest.fn().mockResolvedValue() };
+        const githubService = new GithubService(octokitMock);
+
+        const status = await githubService.processReviews({
+            owner: 'tiste',
+            repo: 'sheriff',
+            sha: '0101',
+        }, 42, 2, ['master', 'master']);
+
+        expect(octokitMock.repos.createStatus).toHaveBeenCalled();
+        expect(status).toEqual({
+            bypass: false,
+            description: 'There is at least 2 or more approvals, it\'s okay',
+            isSuccess: true,
         });
     });
 
@@ -234,7 +266,7 @@ describe('processReviews', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, 1, ['master', 'master']);
+        }, 42, 1, ['master', 'master']);
 
         expect(octokitMock.repos.createStatus).toHaveBeenCalled();
         expect(status).toEqual({
@@ -262,7 +294,7 @@ describe('processCommitMsg', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, ['master', 'master']);
+        }, 42, ['master', 'master']);
 
         expect(octokitMock.repos.createStatus).toHaveBeenCalled();
         expect(status).toEqual({
@@ -288,7 +320,7 @@ describe('processCommitMsg', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, ['master', 'develop']);
+        }, 42, ['master', 'develop']);
 
         expect(octokitMock.repos.createStatus).not.toHaveBeenCalled();
         expect(status).toEqual({
@@ -315,7 +347,7 @@ describe('processCommitMsg', () => {
             owner: 'tiste',
             repo: 'sheriff',
             sha: '0101',
-        }, 2, ['master', 'master']);
+        }, 42, ['master', 'master']);
 
         expect(octokitMock.repos.createStatus).toHaveBeenCalled();
         expect(status).toEqual({
