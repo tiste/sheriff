@@ -17,44 +17,40 @@
 
 ## Features
 
-### /label
+### [sheriff.rocks/label](https://sheriff.rocks/label)
 
-When adding a "Mergeable" label to your pull request, sheriff will approve.
+Require pull request to be flagged with a dedicated label before merge.  
+For instance, when adding a "Mergeable" label to your pull request, sheriff will approve.
 
-> You can configure the label name with the query param `?name=AnotherLabel`
+> You can configure the label name
 
-> Github events: "Pull Request"
+### [sheriff.rocks/reviews](https://sheriff.rocks/reviews)
 
-### /reviews
+Require pull request with required number of approving reviews and no changes requested.  
+For instance, when 2 or more approvals are given to your pull request, sheriff will approve. It will also check on requested reviewers.
 
-When 2 or more approvals are given to your pull request, sheriff will approve. It will also check on requested reviewers.
+> You can configure the value to set the number of reviews you want for a pull request
 
-> You can configure the minimum number of reviews with the query param `?minimum=1`
+### [sheriff.rocks/commit-msg](https://sheriff.rocks/commit-msg)
 
-> Github events: "Pull Request", "Pull request review"
+Require pull request to have commit messages respecting the conventionalcommits.org.  
+For instance, when all commit messages of your pull request are respecting the conventionalcommits.org, sheriff will approve.
 
-### /commit-msg
+> You cannot configure convention for now
 
-When all commit messages of your pull request are respecting the conventionalcommits.org, sheriff will approve.
+### [sheriff.rocks/branch](https://sheriff.rocks/branch)
 
-> Github events: "Pull Request"
+Require request branch name match with the given pattern.  
+For instance, when your pull request branch name match with the \*-JIRA-* pattern, sheriff will approve.
 
-### /branch
+> You can configure the branch name pattern
 
-When your pull request branch name match with the given pattern, sheriff will approve.
+### [sheriff.rocks/wip](https://sheriff.rocks/wip)
 
-> You can configure the branch name pattern with the query param `?pattern=*` as a [glob](https://github.com/isaacs/minimatch) syntax
+Require pull request not to be in WIP mode (e.g. WIP: super duper PR).  
+For instance, when you pull request name is not in WIP mode (e.g. WIP: super duper PR), sheriff will approve.
 
-> Github events: "Pull Request"
-
-
-### /wip
-
-When you pull request name is not in WIP mode (e.g. WIP: super duper PR), sheriff will approve.
-
-> You can configure the pattern with the query param `?pattern=WIP: *` as a [glob](https://github.com/isaacs/minimatch) syntax
-
-> Github events: "Pull request"
+> You can configure the pattern
 
 ## CLI
 
@@ -73,23 +69,11 @@ $ sheriff --help
 
 ## Install
 
-### Easy way (SaaS)
-
 Just go on the website, choose for a [feature](#features), submit it!
 
 You can also choose to publish success updates of the label Sheriff on your Slack channel.
 
 <a href="https://slack.com/oauth/authorize?client_id=19989196163.310602755904&scope=incoming-webhook"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
-
-### Manual way
-
-Add a new webhook to your Github repo, then choose a [feature](#features), append your token and options to the URL.
-
-Base URL: https://sheriff.rocks
-
-Providers: `['github', 'gitlab']`
-
-Example: https://sheriff.rocks/github/reviews?minimum=3&token=foobar
 
 ## Run it locally
 
