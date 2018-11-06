@@ -49,8 +49,10 @@
                                     <div class="uk-margin">
                                         <label class="uk-form-label" for="sheriff-<%= key %>">
                                             <%= key.charAt(0).toUpperCase() + key.slice(1) %><br>
-                                            <small><%= feature.options[key].description %><br>Default
-                                                value: <%= feature.options[key].default %></small>
+                                            <small>
+                                                <%= feature.options[key].description %><br>
+                                                Default value: <%= feature.options[key].default %>
+                                            </small>
                                         </label>
                                         <div class="uk-form-controls">
                                             <input name="options[<%= key %>]" class="uk-input" id="sheriff-<%= key %>"
