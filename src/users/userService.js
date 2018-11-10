@@ -2,6 +2,15 @@
 
 import hat from 'hat';
 import { query } from '../../lib/pg';
+import conf from '../../config/config';
+
+export const FAKE_USER = {
+    accessToken: '12345',
+    provider: 'github',
+    userId: 123,
+    token: 'token',
+    slackUrl: 'http://slack.com',
+};
 
 export function save(userId, provider, accessToken) {
     const token = hat();
@@ -16,7 +25,7 @@ export function save(userId, provider, accessToken) {
     });
 }
 
-export function update(userId, provider, accessToken, token) {
+export function updateToken(userId, provider, accessToken, token) {
 
     return query('UPDATE users SET access_token = $1 WHERE user_id = $2 AND provider = $3', [accessToken, userId, provider]).then(() => {
         return {
@@ -24,6 +33,15 @@ export function update(userId, provider, accessToken, token) {
             provider,
             userId,
             token,
+        };
+    });
+}
+
+export function update(slackUrl, token) {
+
+    return query('UPDATE users SET slack_url = $1 WHERE token = $2 RETURNING *', [slackUrl, token]).then(({ rows }) => {
+        return {
+            slackUrl: rows[0].slack_url,
         };
     });
 }
@@ -46,8 +64,14 @@ export function login(token) {
 }
 
 export function ensureAuthenticated(req, res, next) {
+    if (conf.get('NODE_ENV') !== 'production') {
+        req.user = FAKE_USER;
+        return next();
+    }
+
     if (req.isAuthenticated()) {
         return next();
     }
+
     res.redirect('/login');
 }

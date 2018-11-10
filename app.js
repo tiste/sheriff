@@ -2,7 +2,6 @@
 
 import 'newrelic';
 
-import _ from 'lodash';
 import express from 'express';
 import conf from './config/config';
 import path from 'path';
@@ -18,6 +17,7 @@ import * as userService from './src/users/userService';
 import FEATURES from './src/features/features';
 
 import featuresRouter from './src/features/featuresRouter';
+import userRouter from './src/users/userRouter';
 import githubRouter from './src/github/githubRouter';
 import gitlabRouter from './src/gitlab/gitlabRouter';
 
@@ -59,7 +59,7 @@ passport.use(new GithubStrategy({
             }).catch((e) => done(e, false));
         }
 
-        userService.update(profile.id, 'github', accessToken, rows[0].token).then((user) => {
+        userService.updateToken(profile.id, 'github', accessToken, rows[0].token).then((user) => {
 
             return done(null, user);
         }).catch((e) => done(e, false));
@@ -81,7 +81,7 @@ passport.use(new GitlabStrategy({
             }).catch((e) => done(e, false));
         }
 
-        userService.update(profile.id, 'gitlab', accessToken, rows[0].token).then((user) => {
+        userService.updateToken(profile.id, 'gitlab', accessToken, rows[0].token).then((user) => {
 
             return done(null, user);
         }).catch((e) => done(e, false));
@@ -118,16 +118,8 @@ app.get('/', (req, res) => {
     res.render('index', { title: 'Sheriff', features: FEATURES });
 });
 
-app.get('/login', (req, res) => {
-    res.render('login', { title: 'Login - Sheriff' });
-});
-
-app.get('/me', userService.ensureAuthenticated, (req, res) => {
-
-    res.send(req.user);
-});
-
 app.use('/', featuresRouter);
+app.use('/', userRouter);
 app.use('/github', githubRouter);
 app.use('/gitlab', gitlabRouter);
 
