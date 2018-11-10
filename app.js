@@ -2,7 +2,6 @@
 
 import 'newrelic';
 
-import _ from 'lodash';
 import express from 'express';
 import conf from './config/config';
 import path from 'path';
