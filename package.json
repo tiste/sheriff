@@ -4,6 +4,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "nodemon --exec babel-node -- app.js --inspect",
+    "start:dev": "NODE_ENV=development  nodemon --exec babel-node -- app.js --inspect",
     "test": "jest --coverage"
   },
   "bin": {

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.20/css/uikit.min.css"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.20/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.20/js/uikit-icons.min.js"></script>
+</head>
+<body>
+
+<div class="uk-section uk-section-primary uk-preserve-color">
+    <div class="uk-container">
+        <div class="uk-child-width-1-1@m uk-grid-small uk-grid-match" uk-grid>
+            <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-body">
+                        <form action="/me" method="post">
+                            <fieldset class="uk-fieldset">
+
+                                <legend class="uk-legend">Update account</legend>
+
+                                <div class="uk-margin">
+                                    <label class="uk-form-label" for="token">Token</label>
+                                    <input name="token" id="token" class="uk-input" disabled type="text" value="<%= user.token %>">
+                                </div>
+
+                                <div class="uk-margin">
+                                    <label class="uk-form-label" for="slackUrl">Slack URL</label>
+                                    <input name="slackUrl" id="slackUrl" class="uk-input" type="text" value="<%= user.slackUrl %>" placeholder="http://slack.com">
+                                </div>
+
+                                <div class="uk-margin">
+                                    <input class="uk-button uk-button-primary" type="submit" value="Submit">
+                                    <a href="/" class="uk-button uk-button-secondary">Back home</a>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -50,7 +50,7 @@ For instance, when your pull request branch name match with the \*-JIRA-* patter
 Require pull request not to be in WIP mode (e.g. WIP: super duper PR).  
 For instance, when you pull request name is not in WIP mode (e.g. WIP: super duper PR), sheriff will approve.
 
-> You can configure the pattern
+> You can configure the pattern, and the Slack channel
 
 ## CLI
 

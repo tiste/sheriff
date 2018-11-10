@@ -6,7 +6,7 @@ const conf = convict({
     NODE_ENV: {
         doc: 'The application environment.',
         format: ['development', 'test', 'production', null],
-        default: 'development',
+        default: 'production',
         env: 'NODE_ENV',
     },
     APP_URL: {
