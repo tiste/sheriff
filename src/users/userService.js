@@ -25,14 +25,15 @@ export function save(userId, provider, accessToken) {
     });
 }
 
-export function updateToken(userId, provider, accessToken, token) {
+export function updateToken(userId, provider, accessToken) {
 
-    return query('UPDATE users SET access_token = $1 WHERE user_id = $2 AND provider = $3', [accessToken, userId, provider]).then(() => {
+    return query('UPDATE users SET access_token = $1 WHERE user_id = $2 AND provider = $3 RETURNING *', [accessToken, userId, provider]).then(({ rows }) => {
         return {
-            accessToken,
-            provider,
-            userId,
-            token,
+            accessToken: rows[0].access_token,
+            provider: rows[0].provider,
+            userId: rows[0].user_id,
+            token: rows[0].token,
+            slackUrl: rows[0].slack_url,
         };
     });
 }

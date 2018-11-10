@@ -59,7 +59,7 @@ passport.use(new GithubStrategy({
             }).catch((e) => done(e, false));
         }
 
-        userService.updateToken(profile.id, 'github', accessToken, rows[0].token).then((user) => {
+        userService.updateToken(profile.id, 'github', accessToken).then((user) => {
 
             return done(null, user);
         }).catch((e) => done(e, false));
@@ -81,7 +81,7 @@ passport.use(new GitlabStrategy({
             }).catch((e) => done(e, false));
         }
 
-        userService.updateToken(profile.id, 'gitlab', accessToken, rows[0].token).then((user) => {
+        userService.updateToken(profile.id, 'gitlab', accessToken).then((user) => {
 
             return done(null, user);
         }).catch((e) => done(e, false));

@@ -26,16 +26,25 @@ describe('save()', () => {
 
 describe('updateToken()', () => {
     it('should updateToken an user', async () => {
-        pg.query = jest.fn().mockResolvedValue({});
+        pg.query = jest.fn().mockResolvedValue({
+            rows: [{
+                access_token: 'accesstoken',
+                provider: 'github',
+                user_id: '123',
+                token: 42,
+                slack_url: 'http://',
+            }],
+        });
 
-        const user = await userService.updateToken('123', 'github', 'accesstoken', 24);
+        const user = await userService.updateToken('123', 'github', 'accesstoken');
 
-        expect(pg.query).toHaveBeenCalledWith('UPDATE users SET access_token = $1 WHERE user_id = $2 AND provider = $3', ['accesstoken', '123', 'github']);
+        expect(pg.query).toHaveBeenCalledWith('UPDATE users SET access_token = $1 WHERE user_id = $2 AND provider = $3 RETURNING *', ['accesstoken', '123', 'github']);
         expect(user).toEqual({
             accessToken: 'accesstoken',
             provider: 'github',
             userId: '123',
-            token: 24,
+            token: 42,
+            slackUrl: 'http://',
         });
     });
 });
