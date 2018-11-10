@@ -70,6 +70,10 @@ const FEATURES = {
                 description: 'This value will define a format of work in progress for your pull request title. You can change it as a minimatch pattern.',
                 default: 'WIP: *',
             },
+            slackChannel: {
+                description: 'If set, it will publish on the given Slack channel (e.g. #general), otherwise it take the default value from your Sheriff Slack integration.',
+                default: '',
+            },
         },
         github_events: ['pull_request'],
         img: 'wip.png',
