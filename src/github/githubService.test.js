@@ -449,7 +449,7 @@ describe('createHook', () => {
             name: 'web',
             events: ['pull_request'],
             active: true,
-            config: { url: 'http://' },
+            config: { url: 'http://', content_type: 'application/json' },
         });
     });
 });

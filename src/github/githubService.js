@@ -124,6 +124,6 @@ export default class GithubService {
 
     createHook({ owner, repo }, events, url) {
 
-        return this.octokit.repos.createHook({ owner, repo, name: 'web', events, active: true, config: { url } });
+        return this.octokit.repos.createHook({ owner, repo, name: 'web', events, active: true, config: { url, content_type: 'application/json' } });
     }
 }
