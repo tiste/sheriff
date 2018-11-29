@@ -32,7 +32,7 @@
     "minimatch": "3.0.4",
     "morgan": "1.9.1",
     "newrelic": "4.9.0",
-    "nodemon": "1.18.5",
+    "nodemon": "1.18.7",
     "passport": "0.4.0",
     "passport-github": "1.1.0",
     "passport-gitlab2": "4.0.0",
