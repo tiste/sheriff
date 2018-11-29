@@ -5,7 +5,8 @@
     "lint": "eslint .",
     "start": "nodemon --exec babel-node -- app.js --inspect",
     "start:dev": "NODE_ENV=development nodemon --exec babel-node -- app.js --inspect",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "migrate": "db-migrate"
   },
   "author": "Baptiste Lecocq <baptiste.lecocq@gmail.com> (https://tiste.io)",
   "license": "MIT",

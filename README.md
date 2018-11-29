@@ -85,13 +85,15 @@ Install dependencies: `npm i`
 
 ### Init db (with postgres)
 
-`DATABASE_URL=postgresql://localhost:5432/postgres db-migrate db:drop sheriff`
-`DATABASE_URL=postgresql://localhost:5432/postgres db-migrate db:create sheriff`
-`DATABASE_URL=postgresql://localhost:5432/sheriff db-migrate up`
+`DATABASE_URL=postgresql://localhost:5432/postgres npm run migrate -- db:drop sheriff`
+`DATABASE_URL=postgresql://localhost:5432/postgres npm run migrate -- db:create sheriff`
+`DATABASE_URL=postgresql://localhost:5432/postgres npm run migrate -- up`
 
 ### Run the server :rocket:
 
-`npm start`
+Open ngrok on port 3000: `ngrok http 3000`
+
+Launch the app: `DATABASE_URL=postgresql://localhost:5432/postgres APP_URL=http://XXX.ngrok.io GITHUB_APP_CLIENT_ID= GITHUB_APP_SECRET_ID= npm start`
 
 > You can choose to create your own OAuth app (via Github/Gitlab) and use your own credentials into `GITHUB_APP_CLIENT_ID` or `GITLAB_APP_CLIENT_ID` and `GITHUB_APP_SECRET_ID` or `GITLAB_APP_SECRET_ID`
 
