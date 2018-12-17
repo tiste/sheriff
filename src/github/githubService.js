@@ -48,7 +48,7 @@ export default class GithubService {
     async processReviews({ owner, repo, sha }, number, minimum, compareBranches) {
 
         const { data: reviews } = await this.octokit.pullRequests.getReviews({ owner, repo, number, per_page: 1000 });
-        const { data: requestedReviewers } = await this.octokit.pullRequests.getReviewRequests({ owner, repo, number });
+        const { data: requestedReviewers } = await this.octokit.pullRequests.listReviewRequests({ owner, repo, number });
 
         const reviewers = _(reviews)
             .chain()
@@ -85,7 +85,7 @@ export default class GithubService {
 
     async processCommitMsg({ owner, repo, sha }, number, compareBranches) {
 
-        const { data: commits } = await this.octokit.pullRequests.getCommits({ owner, repo, number });
+        const { data: commits } = await this.octokit.pullRequests.listCommits({ owner, repo, number });
 
         const { isSuccess, description, bypass } = sheriff.commitMsg(_.map(commits, 'commit.message'), compareBranches);
         const state = isSuccess ? 'success' : 'failure';

@@ -125,7 +125,7 @@ describe('processReviews', () => {
                     { id: 4, state: 'APPROVED', user: { id: 'no-tiste' } },
                 ],
             }),
-            getReviewRequests: jest.fn().mockResolvedValue({
+            listReviewRequests: jest.fn().mockResolvedValue({
                 data: {
                     users: [],
                 },
@@ -158,7 +158,7 @@ describe('processReviews', () => {
                     { id: 4, state: 'APPROVED', user: { id: 'no-tiste' } },
                 ],
             }),
-            getReviewRequests: jest.fn().mockResolvedValue({
+            listReviewRequests: jest.fn().mockResolvedValue({
                 data: {
                     users: [],
                 },
@@ -190,7 +190,7 @@ describe('processReviews', () => {
                     { id: 3, state: 'CHANGES_REQUESTED', user: { id: 'no-tiste' } },
                 ],
             }),
-            getReviewRequests: jest.fn().mockResolvedValue({
+            listReviewRequests: jest.fn().mockResolvedValue({
                 data: {
                     users: [],
                 },
@@ -222,7 +222,7 @@ describe('processReviews', () => {
                     { id: 3, state: 'APPROVED', user: { id: 'yes-tiste' } },
                 ],
             }),
-            getReviewRequests: jest.fn().mockResolvedValue({
+            listReviewRequests: jest.fn().mockResolvedValue({
                 data: {
                     users: [],
                 },
@@ -253,7 +253,7 @@ describe('processReviews', () => {
                     { id: 2, state: 'CHANGES_REQUESTED', user: { id: 'no-tiste' } },
                 ],
             }),
-            getReviewRequests: jest.fn().mockResolvedValue({
+            listReviewRequests: jest.fn().mockResolvedValue({
                 data: {
                     users: [],
                 },
@@ -280,7 +280,7 @@ describe('processReviews', () => {
 describe('processCommitMsg', () => {
     it('should process commit messages without bypassing', async () => {
         octokitMock.pullRequests = {
-            getCommits: jest.fn().mockResolvedValue({
+            listCommits: jest.fn().mockResolvedValue({
                 data: [
                     { commit: { message: 'feat: ok' } },
                     { commit: { message: 'fix: super' } },
@@ -306,7 +306,7 @@ describe('processCommitMsg', () => {
 
     it('should process commit messages but bypass', async () => {
         octokitMock.pullRequests = {
-            getCommits: jest.fn().mockResolvedValue({
+            listCommits: jest.fn().mockResolvedValue({
                 data: [
                     { commit: { message: 'feat: ok' } },
                     { commit: { message: 'fix: super' } },
@@ -332,7 +332,7 @@ describe('processCommitMsg', () => {
 
     it('should process commit messages but 3 failures', async () => {
         octokitMock.pullRequests = {
-            getCommits: jest.fn().mockResolvedValue({
+            listCommits: jest.fn().mockResolvedValue({
                 data: [
                     { commit: { message: 'feat: Nok' } },
                     { commit: { message: 'feat:nok' } },
